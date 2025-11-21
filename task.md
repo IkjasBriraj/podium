@@ -1,0 +1,16 @@
+- [ ] Design and Plan Application <!-- id: 0 -->
+    - [/] Create Implementation Plan <!-- id: 1 -->
+    - [ ] Define Data Models and API Specification <!-- id: 2 -->
+- [x] Initialize Project <!-- id: 3 -->
+    - [x] Setup Angular with Tailwind CSS <!-- id: 4 -->
+    - [x] Setup Python FastAPI Backend <!-- id: 5 -->
+- [x] Implement Core Features <!-- id: 6 -->
+    - [x] Landing/Home Page <!-- id: 7 -->
+    - [x] Auth & User Onboarding <!-- id: 12 -->
+    - [x] App Shell & Navigation <!-- id: 15 -->
+    - [x] Enhanced User Profiles (Timeline, Skills) <!-- id: 8 -->
+    - [x] Networking (Connections, Messaging) <!-- id: 9 -->
+    - [x] Feed & Content Sharing <!-- id: 13 -->
+    - [x] Opportunity Marketplace (Sponsorships/Jobs) <!-- id: 10 -->
+    - [ ] Groups & Communities <!-- id: 14 -->
+- [ ] Verification <!-- id: 11 -->

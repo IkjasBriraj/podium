@@ -1,0 +1,135 @@
+<div class="max-w-5xl mx-auto">
+    <!-- Header & Search -->
+    <div class="bg-slate-800 rounded-xl p-8 mb-8 border border-slate-700 text-center">
+        <h1 class="text-3xl font-bold text-white mb-4">Find Your Next <span class="text-emerald-400">Opportunity</span>
+        </h1>
+        <p class="text-slate-400 mb-8 max-w-2xl mx-auto">
+            Discover sponsorships, team tryouts, and coaching gigs tailored for your sport and level.
+        </p>
+        <div class="flex flex-col md:flex-row gap-4 max-w-3xl mx-auto">
+            <input type="text" placeholder="Search by title, skill, or company"
+                class="flex-1 bg-slate-900 text-white rounded-lg px-4 py-3 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none">
+            <input type="text" placeholder="Location (e.g., London, Remote)"
+                class="md:w-64 bg-slate-900 text-white rounded-lg px-4 py-3 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none">
+            <button
+                class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-3 px-8 rounded-lg transition">
+                Search
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Filters Sidebar -->
+        <div class="hidden lg:block space-y-6">
+            <div>
+                <h3 class="text-white font-bold mb-3">Type</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox"
+                            class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-600">
+                        <span>Sponsorship</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox"
+                            class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-600">
+                        <span>Team Tryout</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox"
+                            class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-600">
+                        <span>Coaching Job</span>
+                    </label>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-white font-bold mb-3">Sport</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center space-x-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox"
+                            class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-600"
+                            checked>
+                        <span>Badminton</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-slate-400 cursor-pointer">
+                        <input type="checkbox"
+                            class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-600">
+                        <span>Tennis</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job List -->
+        <div class="lg:col-span-3 space-y-4">
+            <!-- Job Card 1 -->
+            <div
+                class="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-emerald-500/50 transition cursor-pointer group">
+                <div class="flex justify-between items-start">
+                    <div class="flex space-x-4">
+                        <div
+                            class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-xl font-bold text-blue-600">
+                            Y
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition">Brand
+                                Ambassador 2025</h3>
+                            <p class="text-emerald-400 font-medium">Yonex</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm text-slate-400">
+                                <span>📍 Southeast Asia</span>
+                                <span>💰 $10k - $50k / year</span>
+                                <span
+                                    class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded text-xs border border-emerald-500/20">Sponsorship</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-slate-400 hover:text-white">
+                        ⭐
+                    </button>
+                </div>
+                <p class="text-slate-400 mt-4 text-sm line-clamp-2">
+                    We are looking for rising stars in the badminton world to represent the Yonex brand. Candidates must
+                    be ranked in the top 50 nationally and have a strong social media presence.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-700 flex justify-between items-center text-sm">
+                    <span class="text-slate-500">Posted 2 days ago</span>
+                    <span class="text-emerald-400 font-medium">Easy Apply</span>
+                </div>
+            </div>
+
+            <!-- Job Card 2 -->
+            <div
+                class="bg-slate-800 rounded-xl p-6 border border-slate-700 hover:border-emerald-500/50 transition cursor-pointer group">
+                <div class="flex justify-between items-start">
+                    <div class="flex space-x-4">
+                        <div
+                            class="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center text-xl font-bold text-white">
+                            V
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition">Head Coach
+                                - Junior Squad</h3>
+                            <p class="text-emerald-400 font-medium">Victor Academy</p>
+                            <div class="flex items-center space-x-4 mt-2 text-sm text-slate-400">
+                                <span>📍 London, UK</span>
+                                <span>💰 Competitive Salary</span>
+                                <span
+                                    class="bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded text-xs border border-blue-500/20">Coaching</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="text-slate-400 hover:text-white">
+                        ⭐
+                    </button>
+                </div>
+                <p class="text-slate-400 mt-4 text-sm line-clamp-2">
+                    Seeking an experienced coach to lead our U-15 elite squad. Must have BWF Level 2 certification and
+                    previous experience working with high-performance juniors.
+                </p>
+                <div class="mt-4 pt-4 border-t border-slate-700 flex justify-between items-center text-sm">
+                    <span class="text-slate-500">Posted 5 days ago</span>
+                    <span class="text-white font-medium">Apply on Company Site</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
