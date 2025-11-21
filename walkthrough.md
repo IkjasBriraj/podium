@@ -48,3 +48,45 @@
 2.  **Login**: Click "Get Started" or "Join Now" to go to the Login page.
 3.  **Enter App**: Click "Sign In" (no credentials needed for mock) to enter the main app.
 4.  **Explore**: Use the sidebar to navigate between Feed, Network, Jobs, and Profile.
+
+## 5. GIT commands
+
+1. After changing code add changed files to GIT
+
+```
+git add .
+
+```
+2. Commiting your changes to GIT (locally)
+
+```
+git commit -m "Add your comments here.."
+
+```
+
+3. Push your changes to GITHUB (Cloud) - develop branch
+
+```
+git push origin develop
+
+```
+
+4. Moving to branches
+
+```
+git checkout develop
+
+# or 
+
+git checkout master
+
+```
+
+5. Merge your changes from develop to master branch
+
+```
+git checkout master
+
+git merge develop
+
+```
