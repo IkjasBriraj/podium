@@ -5,6 +5,7 @@ import { AppShellComponent } from './components/app-shell/app-shell';
 import { FeedComponent } from './pages/feed/feed';
 import { ProfileComponent } from './pages/profile/profile';
 import { JobsComponent } from './pages/jobs/jobs';
+import { NetworkComponent } from './pages/network/network';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -15,8 +16,10 @@ export const routes: Routes = [
         children: [
             { path: '', redirectTo: 'feed', pathMatch: 'full' },
             { path: 'feed', component: FeedComponent },
+            { path: 'network', component: NetworkComponent },
             { path: 'profile', component: ProfileComponent },
             { path: 'jobs', component: JobsComponent },
         ]
     }
 ];
+

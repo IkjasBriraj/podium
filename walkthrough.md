@@ -55,20 +55,18 @@
 
 ```
 git add .
-
 ```
+
 2. Commiting your changes to GIT (locally)
 
 ```
 git commit -m "Add your comments here.."
-
 ```
 
 3. Push your changes to GITHUB (Cloud) - develop branch
 
 ```
 git push origin develop
-
 ```
 
 4. Moving to branches
@@ -79,7 +77,6 @@ git checkout develop
 # or 
 
 git checkout master
-
 ```
 
 5. Merge your changes from develop to master branch
@@ -88,5 +85,13 @@ git checkout master
 git checkout master
 
 git merge develop
-
 ```
+
+## 6. Changelog
+
+### Fix: Profile Page Freeze
+-   **Issue**: Profile page was freezing on "Loading profile..." because the loading state wasn't being reset if an error occurred during data processing.
+-   **Fix**: Added `finalize` operator to the `getProfile` observable pipe to ensure `isLoading` is always set to `false`, and added error handling for data processing.
+-   **Verification**:
+    1.  Open the Profile page.
+    2.  Verify that the loading spinner disappears and the profile content (or an error message) is displayed.

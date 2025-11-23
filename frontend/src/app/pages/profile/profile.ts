@@ -1,11 +1,341 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { finalize, timeout } from 'rxjs/operators';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ProfileService, Profile, ProfileUpdateRequest, Post } from '../../services/profile.service';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
+  profile: Profile | null = null;
+  isEditing: boolean = false;
+  isLoading: boolean = false;
+  error: string | null = null;
+  profileForm: FormGroup;
+  currentUserId: string = 'u1'; // Hardcoded for now; will use auth service later
 
+  profileImagePreview: string | null = null;
+  coverImagePreview: string | null = null;
+  selectedProfileImage: File | null = null;
+  selectedCoverImage: File | null = null;
+
+  // Posts
+  posts: Post[] = [];
+  newPostContent: string = '';
+  selectedMedia: File | null = null;
+  mediaPreview: string | null = null;
+  isPosting: boolean = false;
+
+  constructor(
+    private profileService: ProfileService,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer
+  ) {
+    this.profileForm = this.fb.group({
+      name: ['', Validators.required],
+      headline: [''],
+      bio: [''],
+      location: [''],
+      category: [''],
+      role: [''],
+      sport: ['']
+    });
+  }
+
+  ngOnInit() {
+    this.loadProfile();
+    this.loadPosts();
+  }
+
+  loadProfile() {
+    console.log('Loading profile for user:', this.currentUserId);
+    this.isLoading = true;
+    this.error = null;
+
+    this.profileService.getProfile(this.currentUserId).pipe(
+      timeout(5000), // Timeout after 5 seconds
+      finalize(() => {
+        this.isLoading = false;
+        console.log('Profile loading finalized');
+        this.cdr.detectChanges();
+      })
+    ).subscribe({
+      next: (profile: Profile) => {
+        console.log('Profile loaded successfully:', profile);
+        this.profile = profile;
+        this.populateForm(profile);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Profile load error:', err);
+        this.error = `Failed to load profile: ${err.message || 'Unknown error'}`;
+      }
+    });
+  }
+
+  populateForm(profile: Profile) {
+    this.profileForm.patchValue({
+      name: profile.name,
+      headline: profile.headline || '',
+      bio: profile.bio || '',
+      location: profile.location || '',
+      category: profile.category || '',
+      role: profile.role,
+      sport: profile.sport
+    });
+  }
+
+  toggleEditMode() {
+    this.isEditing = !this.isEditing;
+    if (!this.isEditing) {
+      // Reset form if canceling
+      if (this.profile) {
+        this.populateForm(this.profile);
+      }
+      this.selectedProfileImage = null;
+      this.selectedCoverImage = null;
+      this.profileImagePreview = null;
+      this.coverImagePreview = null;
+    }
+  }
+
+  async saveProfile() {
+    if (this.profileForm.invalid) {
+      return;
+    }
+
+    this.isLoading = true;
+    this.error = null;
+
+    try {
+      // Upload images first if selected
+      if (this.selectedProfileImage) {
+        await this.uploadProfileImage(this.selectedProfileImage);
+      }
+
+      if (this.selectedCoverImage) {
+        await this.uploadCoverImage(this.selectedCoverImage);
+      }
+
+      // Update profile data
+      const updateData: ProfileUpdateRequest = this.profileForm.value;
+
+      this.profileService.updateProfile(this.currentUserId, updateData).subscribe({
+        next: (updatedProfile) => {
+          this.profile = updatedProfile;
+          this.isEditing = false;
+          this.isLoading = false;
+          this.selectedProfileImage = null;
+          this.selectedCoverImage = null;
+          this.profileImagePreview = null;
+          this.coverImagePreview = null;
+        },
+        error: (err) => {
+          this.error = 'Failed to update profile. Please try again.';
+          console.error('Profile update error:', err);
+          this.isLoading = false;
+        }
+      });
+    } catch (err) {
+      this.error = 'Failed to upload images. Please try again.';
+      console.error('Image upload error:', err);
+      this.isLoading = false;
+    }
+  }
+
+  async onProfileImageChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Optimistic update / Preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.profileImagePreview = e.target?.result as string;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        await this.uploadProfileImage(file);
+        // Clear preview after successful upload as the profile data is updated
+        this.profileImagePreview = null;
+        this.cdr.detectChanges();
+      } catch (error) {
+        console.error('Failed to upload profile image', error);
+        alert('Failed to upload profile image');
+        this.profileImagePreview = null; // Revert on error
+        this.cdr.detectChanges();
+      }
+    }
+  }
+
+  onProfileImageSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.selectedProfileImage = file;
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.profileImagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onCoverImageSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.selectedCoverImage = file;
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.coverImagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  uploadProfileImage(file: File): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.profileService.uploadProfileImage(this.currentUserId, file).subscribe({
+        next: (response) => {
+          if (this.profile) {
+            this.profile.profile_image = response.image_url;
+          }
+          resolve();
+        },
+        error: (err) => {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  uploadCoverImage(file: File): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.profileService.uploadCoverImage(this.currentUserId, file).subscribe({
+        next: (response) => {
+          if (this.profile) {
+            this.profile.cover_image = response.image_url;
+          }
+          resolve();
+        },
+        error: (err) => {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  getProfileImageUrl(): string {
+    if (this.profileImagePreview) {
+      return this.profileImagePreview;
+    }
+    if (this.profile?.profile_image) {
+      return `http://localhost:8000${this.profile.profile_image}`;
+    }
+    return '';
+  }
+
+  getCoverImageUrl(): string {
+    if (this.coverImagePreview) {
+      return this.coverImagePreview;
+    }
+    if (this.profile?.cover_image) {
+      return `http://localhost:8000${this.profile.cover_image}`;
+    }
+    return '';
+  }
+
+  // --- Posts ---
+
+  loadPosts() {
+    this.profileService.getUserPosts(this.currentUserId).subscribe({
+      next: (posts) => {
+        this.posts = posts;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading posts:', err)
+    });
+  }
+
+  onMediaSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.selectedMedia = file;
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.mediaPreview = e.target?.result as string;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  createPost() {
+    if (!this.newPostContent && !this.selectedMedia) return;
+
+    this.isPosting = true;
+    const type = this.selectedMedia?.type.startsWith('video') ? 'video' : (this.selectedMedia ? 'image' : 'text');
+
+    this.profileService.createPost(this.currentUserId, this.newPostContent, type, this.selectedMedia || undefined)
+      .pipe(finalize(() => {
+        this.isPosting = false;
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (post) => {
+          this.posts.unshift(post);
+          this.newPostContent = '';
+          this.selectedMedia = null;
+          this.mediaPreview = null;
+          this.profileForm.get('newPostContent')?.reset(); // If using form control
+          this.playSuccessSound();
+        },
+        error: (err) => {
+          console.error('Error creating post:', err);
+          alert('Failed to create post');
+        }
+      });
+  }
+
+  playSuccessSound() {
+    const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
+    if (!AudioContext) return;
+
+    const ctx = new AudioContext();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(500, ctx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.1);
+
+    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.5);
+  }
+
+  getSafeUrl(url: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
 }
