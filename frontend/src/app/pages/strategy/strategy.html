@@ -1,0 +1,66 @@
+<div class="strategy-container">
+    <!-- Header -->
+    <div class="header-section">
+        <div class="max-w-6xl mx-auto px-6 py-12">
+            <h1 class="page-title">🎯 Strategy Hub</h1>
+            <p class="page-subtitle">Learn winning tactics and game strategies from the pros</p>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        <div class="content-wrapper">
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Strategies</h2>
+                    <button class="create-btn">+ New Strategy</button>
+                </div>
+
+                <div class="strategies-list">
+                    <div class="strategy-card" *ngFor="let strategy of strategies">
+                        <div class="strategy-header">
+                            <div class="category-tag">{{strategy.category}}</div>
+                        </div>
+                        <h3 class="strategy-title">{{strategy.title}}</h3>
+                        <p class="strategy-author">by {{strategy.author}}</p>
+                        <div class="strategy-footer">
+                            <span class="stat-item">💬 {{strategy.comments}} comments</span>
+                            <span class="stat-item">👍 {{strategy.likes}} likes</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Popular Topics</h3>
+                    <div class="topics-list">
+                        <div class="topic-item" *ngFor="let topic of popularTopics">
+                            <span class="topic-name">{{topic.name}}</span>
+                            <span class="topic-count">{{topic.count}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-card mt-6">
+                    <h3 class="sidebar-title">Quick Tips</h3>
+                    <div class="tips-list">
+                        <div class="tip-item">
+                            <span class="tip-icon">💡</span>
+                            <p class="tip-text">Always return to center court after each shot</p>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">💡</span>
+                            <p class="tip-text">Vary your serves to keep opponents guessing</p>
+                        </div>
+                        <div class="tip-item">
+                            <span class="tip-icon">💡</span>
+                            <p class="tip-text">Watch your opponent's racket angle</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

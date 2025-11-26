@@ -25,6 +25,22 @@ export interface Profile {
     category?: string;
     profile_image?: string;
     cover_image?: string;
+    // Sport-specific player information
+    age?: number;
+    weight?: string;
+    height?: string;
+    playing_hand?: string;
+    years_of_experience?: number;
+    age_category?: string;
+    academy?: string;
+    // Coach-specific information
+    coaching_license?: string;
+    coaching_experience_years?: number;
+    coaching_specialization?: string;
+    current_organization?: string;
+    coaching_philosophy?: string;
+    age_groups_coached?: string;
+    coaching_achievements?: string;
     skills: Skill[];
     experience: Experience[];
 }
@@ -47,6 +63,18 @@ export interface ProfileUpdateRequest {
     category?: string;
     role?: string;
     sport?: string;
+    // Sport-specific player information
+    age?: number;
+    weight?: string;
+    height?: string;
+    playing_hand?: string;
+    years_of_experience?: number;
+    age_category?: string;
+    coaching_philosophy?: string;
+    age_groups_coached?: string;
+    coaching_achievements?: string;
+    skills?: Skill[];
+    experience?: Experience[];
 }
 
 export interface ImageUploadResponse {

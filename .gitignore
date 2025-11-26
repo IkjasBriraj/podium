@@ -1,0 +1,6 @@
+.env
+mongo-data
+uploads
+uploads/*
+.vscode
+__pycache__

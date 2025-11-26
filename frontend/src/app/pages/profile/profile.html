@@ -1,150 +1,120 @@
-<div class="max-w-4xl mx-auto">
+<div class="max-w-4xl mx-auto" [formGroup]="profileForm">
     <!-- Loading State -->
     <div *ngIf="isLoading" class="flex justify-center items-center h-64">
         <div class="text-white text-xl">Loading profile...</div>
     </div>
-
-    <!-- Error State -->
-    <div *ngIf="error" class="bg-red-900/50 border border-red-500 text-white p-4 rounded-lg mb-6">
-        {{ error }}
-    </div>
-
-    <!-- Profile Content -->
-    <div *ngIf="!isLoading && profile">
-        <!-- Profile Header -->
-        <div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 mb-6">
-            <!-- Cover Image Section -->
-            <div class="h-48 relative"
-                [style.background]="getCoverImageUrl() ? 'url(' + getCoverImageUrl() + ') center/cover' : 'linear-gradient(to right, rgb(6 78 59), rgb(15 23 42))'">
-                <!-- Cover Image Upload Button (Edit Mode) -->
-                <div *ngIf="isEditing" class="absolute top-4 right-4">
-                    <label for="cover-upload"
-                        class="bg-black/50 hover:bg-black/70 text-white p-2 rounded-full backdrop-blur-sm transition cursor-pointer inline-block">
-                        📷 Change Cover
-                    </label>
-                    <input id="cover-upload" type="file" accept="image/*" class="hidden"
-                        (change)="onCoverImageSelect($event)">
-                </div>
+    <div *ngIf="profile">
+        <!-- Cover Image -->
+        <div class="relative h-48 md:h-64 rounded-xl overflow-hidden mb-16 bg-slate-800 group">
+            <img *ngIf="getCoverImageUrl()" [src]="getCoverImageUrl()" class="w-full h-full object-cover">
+            <div *ngIf="!getCoverImageUrl()"
+                class="w-full h-full flex items-center justify-center bg-slate-700 text-slate-500">
+                <span>Add Cover Photo</span>
             </div>
 
-            <div class="px-8 pb-8 relative">
-                <!-- Profile Image -->
-                <div class="absolute -top-16 left-8">
-                    <div class="w-32 h-32 rounded-full border-4 border-slate-800 bg-slate-600 overflow-hidden relative">
-                        <img *ngIf="getProfileImageUrl()" [src]="getProfileImageUrl()" alt="Profile"
-                            class="w-full h-full object-cover">
-                        <div *ngIf="!getProfileImageUrl()"
-                            class="w-full h-full flex items-center justify-center text-4xl text-slate-400">
-                            👤
-                        </div>
+            <!-- Edit Cover Button -->
+            <label *ngIf="isEditing"
+                class="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full cursor-pointer transition opacity-0 group-hover:opacity-100">
+                📷
+                <input type="file" (change)="onCoverImageSelect($event)" accept="image/*" class="hidden">
+            </label>
 
-                        <!-- Direct Upload Overlay (Always visible on hover) -->
-                        <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 hover:opacity-100 transition cursor-pointer"
-                            (click)="fileInput.click()">
-                            <div class="text-white text-center">
-                                <div class="text-2xl mb-1">📷</div>
-                                <div class="text-xs font-bold">Change Photo</div>
-                            </div>
-                            <input #fileInput type="file" accept="image/*" class="hidden"
-                                (change)="onProfileImageChange($event)">
-                        </div>
+            <!-- Profile Image Container (Overlapping) -->
+            <div class="absolute -bottom-12 left-6 md:left-10">
+                <div
+                    class="relative w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-900 bg-slate-700 overflow-hidden group/avatar">
+                    <img *ngIf="getProfileImageUrl()" [src]="getProfileImageUrl()" class="w-full h-full object-cover">
+                    <div *ngIf="!getProfileImageUrl()" class="w-full h-full flex items-center justify-center text-4xl">
+                        👤
                     </div>
+
+                    <!-- Edit Profile Image Button -->
+                    <label *ngIf="isEditing"
+                        class="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover/avatar:opacity-100 cursor-pointer transition">
+                        📷
+                        <input type="file" (change)="onProfileImageChange($event)" accept="image/*" class="hidden">
+                    </label>
                 </div>
+            </div>
+        </div>
+        <input formControlName="name" type="text"
+            class="text-3xl font-bold text-white bg-slate-700 border border-slate-600 rounded px-3 py-1 w-full max-w-md"
+            placeholder="Your Name">
 
-                <!-- Profile Info Section -->
-                <div class="pt-20 ml-44">
-                    <div class="flex justify-between items-start">
-                        <form [formGroup]="profileForm" class="flex-1">
-                            <!-- Name Field -->
-                            <div *ngIf="!isEditing" class="mb-2">
-                                <h1 class="text-3xl font-bold text-white">{{ profile.name }}</h1>
-                            </div>
-                            <div *ngIf="isEditing" class="mb-2">
-                                <input formControlName="name" type="text"
-                                    class="text-3xl font-bold text-white bg-slate-700 border border-slate-600 rounded px-3 py-1 w-full max-w-md"
-                                    placeholder="Your Name">
-                            </div>
+        <!-- Headline Field -->
+        <div *ngIf="!isEditing" class="mb-1">
+            <p class="text-emerald-400 font-medium">{{ profile.headline || 'Add your headline' }}
+            </p>
+        </div>
+        <div *ngIf="isEditing" class="mb-2">
+            <input formControlName="headline" type="text"
+                class="text-emerald-400 font-medium bg-slate-700 border border-slate-600 rounded px-3 py-1 w-full max-w-md"
+                placeholder="Your headline (e.g., Professional Athlete)">
+        </div>
 
-                            <!-- Headline Field -->
-                            <div *ngIf="!isEditing" class="mb-1">
-                                <p class="text-emerald-400 font-medium">{{ profile.headline || 'Add your headline' }}
-                                </p>
-                            </div>
-                            <div *ngIf="isEditing" class="mb-2">
-                                <input formControlName="headline" type="text"
-                                    class="text-emerald-400 font-medium bg-slate-700 border border-slate-600 rounded px-3 py-1 w-full max-w-md"
-                                    placeholder="Your headline (e.g., Professional Athlete)">
-                            </div>
+        <!-- Bio Field -->
+        <div *ngIf="!isEditing" class="mb-4">
+            <p class="text-slate-400">{{ profile.bio || 'Add your bio' }}</p>
+        </div>
+        <div *ngIf="isEditing" class="mb-4">
+            <textarea formControlName="bio" rows="2"
+                class="text-slate-400 bg-slate-700 border border-slate-600 rounded px-3 py-2 w-full max-w-md"
+                placeholder="Tell us about yourself"></textarea>
+        </div>
 
-                            <!-- Bio Field -->
-                            <div *ngIf="!isEditing" class="mb-4">
-                                <p class="text-slate-400">{{ profile.bio || 'Add your bio' }}</p>
-                            </div>
-                            <div *ngIf="isEditing" class="mb-4">
-                                <textarea formControlName="bio" rows="2"
-                                    class="text-slate-400 bg-slate-700 border border-slate-600 rounded px-3 py-2 w-full max-w-md"
-                                    placeholder="Tell us about yourself"></textarea>
-                            </div>
+        <!-- Location and Category -->
+        <div class="flex items-center space-x-4 text-sm text-slate-400">
+            <!-- Location -->
+            <span *ngIf="!isEditing" class="flex items-center">
+                📍 {{ profile.location || 'Add location' }}
+            </span>
+            <div *ngIf="isEditing" class="flex items-center">
+                <span class="mr-2">📍</span>
+                <input formControlName="location" type="text"
+                    class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm" placeholder="Location">
+            </div>
 
-                            <!-- Location and Category -->
-                            <div class="flex items-center space-x-4 text-sm text-slate-400">
-                                <!-- Location -->
-                                <span *ngIf="!isEditing" class="flex items-center">
-                                    📍 {{ profile.location || 'Add location' }}
-                                </span>
-                                <div *ngIf="isEditing" class="flex items-center">
-                                    <span class="mr-2">📍</span>
-                                    <input formControlName="location" type="text"
-                                        class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-                                        placeholder="Location">
-                                </div>
+            <!-- Category -->
+            <span *ngIf="!isEditing" class="flex items-center">
+                🏸 {{ profile.category || 'Add category' }}
+            </span>
+            <div *ngIf="isEditing" class="flex items-center">
+                <span class="mr-2">🏸</span>
+                <input formControlName="category" type="text"
+                    class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
+                    placeholder="Category (e.g., Singles)">
+            </div>
+        </div>
 
-                                <!-- Category -->
-                                <span *ngIf="!isEditing" class="flex items-center">
-                                    🏸 {{ profile.category || 'Add category' }}
-                                </span>
-                                <div *ngIf="isEditing" class="flex items-center">
-                                    <span class="mr-2">🏸</span>
-                                    <input formControlName="category" type="text"
-                                        class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-sm"
-                                        placeholder="Category (e.g., Singles)">
-                                </div>
-                            </div>
-                        </form>
 
-                        <!-- Action Buttons -->
-                        <div class="flex space-x-3">
-                            <!-- View Mode Buttons -->
-                            <div *ngIf="!isEditing" class="flex space-x-3">
-                                <button (click)="toggleEditMode()"
-                                    class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2 px-6 rounded-full transition">
-                                    Edit Profile
-                                </button>
-                                <button
-                                    class="border border-slate-600 hover:border-emerald-400 hover:text-emerald-400 text-white font-bold py-2 px-6 rounded-full transition">
-                                    Share
-                                </button>
-                            </div>
+        <!-- Action Buttons -->
+        <div class="flex space-x-3">
+            <!-- View Mode Buttons -->
+            <div *ngIf="!isEditing" class="flex space-x-3">
+                <button (click)="toggleEditMode()"
+                    class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2 px-6 rounded-full transition">
+                    Edit Profile
+                </button>
+                <button
+                    class="border border-slate-600 hover:border-emerald-400 hover:text-emerald-400 text-white font-bold py-2 px-6 rounded-full transition">
+                    Share
+                </button>
+            </div>
 
-                            <!-- Edit Mode Buttons -->
-                            <div *ngIf="isEditing" class="flex space-x-3">
-                                <button (click)="saveProfile()" [disabled]="profileForm.invalid || isLoading"
-                                    class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2 px-6 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
-                                    {{ isLoading ? 'Saving...' : 'Save' }}
-                                </button>
-                                <button (click)="toggleEditMode()" [disabled]="isLoading"
-                                    class="border border-slate-600 hover:border-red-400 hover:text-red-400 text-white font-bold py-2 px-6 rounded-full transition">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Edit Mode Buttons -->
+            <div *ngIf="isEditing" class="flex space-x-3">
+                <button (click)="saveProfile()" [disabled]="profileForm.invalid || isLoading"
+                    class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2 px-6 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    {{ isLoading ? 'Saving...' : 'Save' }}
+                </button>
+                <button (click)="toggleEditMode()" [disabled]="isLoading"
+                    class="border border-slate-600 hover:border-red-400 hover:text-red-400 text-white font-bold py-2 px-6 rounded-full transition">
+                    Cancel
+                </button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Left Column: Stats & Skills -->
             <div class="space-y-6">
                 <!-- About -->
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
@@ -154,13 +124,225 @@
                     </p>
                 </div>
 
+                <!-- Player Information -->
+                <div *ngIf="profile.role === 'athlete'"
+                    class="bg-slate-800 rounded-xl p-6 border border-slate-700 player-info-card">
+                    <h3 class="text-lg font-bold text-white mb-4">Player Information</h3>
+                    <div class="space-y-3">
+                        <!-- Age -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">🎂</span> Age
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium">
+                                {{ profile.age || 'Not set' }}
+                            </span>
+                            <input *ngIf="isEditing" formControlName="age" type="number"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm w-24 text-right"
+                                placeholder="25">
+                        </div>
+
+                        <!-- Age Category -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">🏆</span> Category
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium">
+                                {{ profile.age_category || 'Not set' }}
+                            </span>
+                            <select *ngIf="isEditing" formControlName="age_category"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm">
+                                <option value="">Select</option>
+                                <option value="Under 11">Under 11</option>
+                                <option value="Under 13">Under 13</option>
+                                <option value="Under 15">Under 15</option>
+                                <option value="Under 17">Under 17</option>
+                                <option value="Under 19">Under 19</option>
+                                <option value="Senior">Senior</option>
+                            </select>
+                        </div>
+
+                        <!-- Weight -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">⚖️</span> Weight
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium">
+                                {{ profile.weight || 'Not set' }}
+                            </span>
+                            <input *ngIf="isEditing" formControlName="weight" type="text"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm w-24 text-right"
+                                placeholder="70 kg">
+                        </div>
+
+                        <!-- Height -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">📏</span> Height
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium">
+                                {{ profile.height || 'Not set' }}
+                            </span>
+                            <input *ngIf="isEditing" formControlName="height" type="text"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm w-24 text-right"
+                                placeholder="175 cm">
+                        </div>
+
+                        <!-- Playing Hand -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">✋</span> Playing Hand
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium">
+                                {{ profile.playing_hand || 'Not set' }}
+                            </span>
+                            <select *ngIf="isEditing" formControlName="playing_hand"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm">
+                                <option value="">Select</option>
+                                <option value="Left">Left</option>
+                                <option value="Right">Right</option>
+                                <option value="Ambidextrous">Ambidextrous</option>
+                            </select>
+                        </div>
+
+                        <!-- Years of Experience -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">⏱️</span> Experience
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium">
+                                {{ profile.years_of_experience ? profile.years_of_experience + ' years' : 'Not set' }}
+                            </span>
+                            <input *ngIf="isEditing" formControlName="years_of_experience" type="number"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm w-24 text-right"
+                                placeholder="10">
+                        </div>
+
+                        <!-- Academy -->
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 text-sm flex items-center">
+                                <span class="mr-2">🏫</span> Academy
+                            </span>
+                            <span *ngIf="!isEditing" class="text-white font-medium text-right flex-1 ml-4">
+                                {{ profile.academy || 'Not set' }}
+                            </span>
+                            <input *ngIf="isEditing" formControlName="academy" type="text"
+                                class="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-white text-sm flex-1"
+                                placeholder="Academy name">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coach Information -->
+                <div *ngIf="profile.role === 'coach'"
+                    class="bg-slate-800 rounded-xl p-6 border border-slate-700 coach-info-card relative overflow-hidden">
+                    <!-- Background Pattern -->
+                    <div class="absolute top-0 right-0 w-32 h-32 opacity-5 pointer-events-none">
+                        <svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full text-white">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-white mb-4 relative z-10">Coach Information</h3>
+                    <div class="space-y-4 relative z-10">
+                        <!-- License -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">License /
+                                Certification</label>
+                            <div *ngIf="!isEditing" class="text-white font-medium">{{ profile.coaching_license || 'Not
+                                set' }}</div>
+                            <input *ngIf="isEditing" formControlName="coaching_license" type="text"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                                placeholder="e.g. BWF Level 2">
+                        </div>
+
+                        <!-- Experience Years -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">Coaching
+                                Experience</label>
+                            <div *ngIf="!isEditing" class="text-white font-medium">{{ profile.coaching_experience_years
+                                ? profile.coaching_experience_years + ' years' : 'Not set' }}</div>
+                            <input *ngIf="isEditing" formControlName="coaching_experience_years" type="number"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                                placeholder="Years">
+                        </div>
+
+                        <!-- Specialization -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">Specialization</label>
+                            <div *ngIf="!isEditing" class="text-white font-medium">{{ profile.coaching_specialization ||
+                                'Not set' }}</div>
+                            <select *ngIf="isEditing" formControlName="coaching_specialization"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm">
+                                <option value="">Select Specialization</option>
+                                <option value="Singles">Singles</option>
+                                <option value="Doubles">Doubles</option>
+                                <option value="Mixed Doubles">Mixed Doubles</option>
+                                <option value="Women's Singles">Women's Singles</option>
+                                <option value="Women's Doubles">Women's Doubles</option>
+                                <option value="Youth Development">Youth Development</option>
+                                <option value="High Performance">High Performance</option>
+                            </select>
+                        </div>
+
+                        <!-- Organization -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">Current
+                                Organization</label>
+                            <div *ngIf="!isEditing" class="text-white font-medium">{{ profile.current_organization ||
+                                'Not set' }}</div>
+                            <input *ngIf="isEditing" formControlName="current_organization" type="text"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                                placeholder="Academy or Club">
+                        </div>
+
+                        <!-- Age Groups -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">Age Groups
+                                Coached</label>
+                            <div *ngIf="!isEditing" class="text-white font-medium">{{ profile.age_groups_coached || 'Not
+                                set' }}</div>
+                            <input *ngIf="isEditing" formControlName="age_groups_coached" type="text"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                                placeholder="e.g. U13, U15, Senior">
+                        </div>
+
+                        <!-- Philosophy -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">Coaching
+                                Philosophy</label>
+                            <div *ngIf="!isEditing" class="text-white text-sm italic">"{{ profile.coaching_philosophy ||
+                                'Not set' }}"</div>
+                            <textarea *ngIf="isEditing" formControlName="coaching_philosophy" rows="3"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                                placeholder="Share your coaching philosophy..."></textarea>
+                        </div>
+
+                        <!-- Achievements -->
+                        <div>
+                            <label class="text-slate-400 text-xs uppercase font-bold mb-1 block">Notable
+                                Achievements</label>
+                            <div *ngIf="!isEditing" class="text-white text-sm">{{ profile.coaching_achievements || 'Not
+                                set' }}</div>
+                            <textarea *ngIf="isEditing" formControlName="coaching_achievements" rows="3"
+                                class="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                                placeholder="List key achievements..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Skills -->
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-white">Skills & Endorsements</h3>
-                        <button class="text-emerald-400 text-sm hover:underline">Add New</button>
+                        <button *ngIf="isEditing" (click)="addSkill()"
+                            class="text-emerald-400 text-sm hover:underline">Add
+                            New</button>
                     </div>
-                    <div class="space-y-4" *ngIf="profile.skills.length > 0">
+
+                    <!-- View Mode -->
+                    <div *ngIf="!isEditing" class="space-y-4">
                         <div *ngFor="let skill of profile.skills">
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="text-white font-medium">{{ skill.name }}</span>
@@ -168,13 +350,33 @@
                             </div>
                             <div class="w-full bg-slate-700 rounded-full h-2">
                                 <div class="bg-emerald-500 h-2 rounded-full"
-                                    [style.width.%]="(skill.endorsements / 50) * 100"></div>
+                                    [style.width.%]="(skill.endorsements / 50) * 100">
+                                </div>
+                            </div>
+                        </div>
+                        <p *ngIf="profile.skills.length === 0" class="text-slate-400 text-sm">
+                            No skills added yet.
+                        </p>
+                    </div>
+
+                    <!-- Edit Mode -->
+                    <div *ngIf="isEditing" formArrayName="skills" class="space-y-4">
+                        <div *ngFor="let skill of skillsArray.controls; let i=index" [formGroupName]="i"
+                            class="bg-slate-700/50 p-3 rounded-lg relative group">
+                            <button (click)="removeSkill(i)"
+                                class="absolute top-2 right-2 text-slate-500 hover:text-red-400">×</button>
+                            <div class="space-y-2">
+                                <input formControlName="name" type="text"
+                                    class="w-full bg-slate-600 border border-slate-500 rounded px-2 py-1 text-white text-sm"
+                                    placeholder="Skill Name">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400 text-xs">Endorsements:</span>
+                                    <input formControlName="endorsements" type="number"
+                                        class="w-20 bg-slate-600 border border-slate-500 rounded px-2 py-1 text-white text-sm">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <p *ngIf="profile.skills.length === 0" class="text-slate-400 text-sm">
-                        No skills added yet.
-                    </p>
                 </div>
             </div>
 
@@ -182,24 +384,68 @@
             <div class="md:col-span-2 space-y-6">
                 <!-- Experience -->
                 <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <h3 class="text-lg font-bold text-white mb-6">Experience</h3>
-                    <div class="space-y-8 border-l-2 border-slate-700 ml-3 pl-8 relative"
-                        *ngIf="profile.experience.length > 0">
-                        <div *ngFor="let exp of profile.experience; let first = first" class="relative">
-                            <div
-                                [class]="first ? 'absolute -left-[41px] bg-slate-800 border-2 border-emerald-500 w-6 h-6 rounded-full' : 'absolute -left-[41px] bg-slate-800 border-2 border-slate-600 w-6 h-6 rounded-full'">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-white">Experience</h3>
+                        <button *ngIf="isEditing" (click)="addExperience()"
+                            class="text-emerald-400 text-sm hover:underline">Add
+                            New</button>
+                    </div>
+
+                    <!-- View Mode -->
+                    <div *ngIf="!isEditing">
+                        <div class="space-y-8 border-l-2 border-slate-700 ml-3 pl-8 relative"
+                            *ngIf="profile.experience.length > 0">
+                            <div *ngFor="let exp of profile.experience; let first = first" class="relative">
+                                <div
+                                    [class]="first ? 'absolute -left-[41px] bg-slate-800 border-2 border-emerald-500 w-6 h-6 rounded-full' : 'absolute -left-[41px] bg-slate-800 border-2 border-slate-600 w-6 h-6 rounded-full'">
+                                </div>
+                                <h4 class="text-white font-bold text-lg">{{ exp.role }}</h4>
+                                <p class="text-emerald-400">{{ exp.org }}</p>
+                                <p class="text-slate-500 text-sm mb-2">{{ exp.years }}</p>
+                                <p class="text-slate-400 text-sm" *ngIf="exp.description">
+                                    {{ exp.description }}
+                                </p>
                             </div>
-                            <h4 class="text-white font-bold text-lg">{{ exp.role }}</h4>
-                            <p class="text-emerald-400">{{ exp.org }}</p>
-                            <p class="text-slate-500 text-sm mb-2">{{ exp.years }}</p>
-                            <p class="text-slate-400 text-sm" *ngIf="exp.description">
-                                {{ exp.description }}
-                            </p>
+                        </div>
+                        <p *ngIf="profile.experience.length === 0" class="text-slate-400 text-sm">
+                            No experience added yet.
+                        </p>
+                    </div>
+
+                    <!-- Edit Mode -->
+                    <div *ngIf="isEditing" formArrayName="experience" class="space-y-4">
+                        <div *ngFor="let exp of experienceArray.controls; let i=index" [formGroupName]="i"
+                            class="bg-slate-700/50 p-4 rounded-lg relative group">
+                            <button (click)="removeExperience(i)"
+                                class="absolute top-2 right-2 text-slate-500 hover:text-red-400">×</button>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-slate-400 text-xs block mb-1">Role</label>
+                                    <input formControlName="role" type="text"
+                                        class="w-full bg-slate-600 border border-slate-500 rounded px-2 py-1 text-white text-sm"
+                                        placeholder="e.g. Head Coach">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-xs block mb-1">Organization</label>
+                                    <input formControlName="org" type="text"
+                                        class="w-full bg-slate-600 border border-slate-500 rounded px-2 py-1 text-white text-sm"
+                                        placeholder="e.g. National Team">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-xs block mb-1">Years</label>
+                                    <input formControlName="years" type="text"
+                                        class="w-full bg-slate-600 border border-slate-500 rounded px-2 py-1 text-white text-sm"
+                                        placeholder="e.g. 2020 - Present">
+                                </div>
+                                <div>
+                                    <label class="text-slate-400 text-xs block mb-1">Description</label>
+                                    <textarea formControlName="description" rows="2"
+                                        class="w-full bg-slate-600 border border-slate-500 rounded px-2 py-1 text-white text-sm"
+                                        placeholder="Describe your role..."></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <p *ngIf="profile.experience.length === 0" class="text-slate-400 text-sm">
-                        No experience added yet.
-                    </p>
                 </div>
 
                 <!-- Recent Activity (Posts) -->
@@ -257,11 +503,11 @@
 
                             <div *ngIf="post.media_url"
                                 class="rounded-lg overflow-hidden border border-slate-700 bg-black">
-                                <img *ngIf="post.type === 'image'" [src]="'http://localhost:8000' + post.media_url"
+                                <img *ngIf="post.type === 'image'" [src]="'http://192.168.1.4:8000' + post.media_url"
                                     class="w-full max-h-96 object-contain">
                                 <video *ngIf="post.type === 'video'"
-                                    [src]="getSafeUrl('http://localhost:8000' + post.media_url)" class="w-full max-h-96"
-                                    controls></video>
+                                    [src]="getSafeUrl('http://192.168.1.4:8000' + post.media_url)"
+                                    class="w-full max-h-96" controls></video>
                             </div>
 
                             <div class="flex gap-4 mt-3 text-slate-400 text-sm">

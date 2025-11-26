@@ -25,17 +25,24 @@
         </div>
     </div>
 
-    <!-- Feed Filter -->
+    <!-- Quick Navigation -->
     <div class="flex space-x-4 mb-6 overflow-x-auto pb-2">
-        <button
-            class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/50 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap">All
-            Posts</button>
-        <button
-            class="bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">Training</button>
-        <button
-            class="bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">Highlights</button>
-        <button
-            class="bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">Strategy</button>
+        <a routerLink="/app/feed" routerLinkActive="active-nav" [routerLinkActiveOptions]="{exact: true}"
+            class="nav-btn bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">
+            All Posts
+        </a>
+        <a routerLink="/app/training" routerLinkActive="active-nav"
+            class="nav-btn bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">
+            Training
+        </a>
+        <a routerLink="/app/highlights" routerLinkActive="active-nav"
+            class="nav-btn bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">
+            Highlights
+        </a>
+        <a routerLink="/app/strategy" routerLinkActive="active-nav"
+            class="nav-btn bg-slate-800 text-slate-400 border border-slate-700 hover:border-emerald-500/50 hover:text-emerald-400 px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap transition">
+            Strategy
+        </a>
     </div>
 
     <!-- Post 1 -->

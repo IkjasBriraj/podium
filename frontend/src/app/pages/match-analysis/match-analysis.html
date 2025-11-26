@@ -1,0 +1,73 @@
+<div class="analysis-container">
+    <div class="max-w-4xl mx-auto px-6 py-12">
+        <div class="header-section text-center mb-12">
+            <h1 class="page-title">🏸 Match Analysis AI</h1>
+            <p class="page-subtitle">Powered by Gemini 3.0 Vision</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-area" *ngIf="!isUploading && !isAnalyzing && !analysisComplete">
+            <div class="upload-box">
+                <div class="icon-wrapper">
+                    <span class="upload-icon">📤</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">Upload Match Video</h3>
+                <p class="text-slate-400 mb-6">Drag & drop or click to select a video file for AI analysis</p>
+                <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="video/*" hidden>
+                <label for="fileInput" class="upload-btn">Select Video</label>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section" *ngIf="isUploading || isAnalyzing">
+            <div class="status-card">
+                <div class="loader-animation" *ngIf="isAnalyzing">
+                    <div class="scanner"></div>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">
+                    {{ isUploading ? 'Uploading Video...' : 'Analyzing Match...' }}
+                </h3>
+                <p class="text-emerald-400 mb-4 font-mono">{{ isUploading ? uploadProgress + '%' : analysisStep }}</p>
+
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" [style.width.%]="isUploading ? uploadProgress : analysisProgress">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" *ngIf="analysisComplete">
+            <div class="score-card mb-8">
+                <div class="score-circle">
+                    <span class="score-value">{{ analysisResults.score }}</span>
+                    <span class="score-label">Performance Score</span>
+                </div>
+                <div class="score-summary">
+                    <h3 class="text-2xl font-bold text-white mb-2">Analysis Complete</h3>
+                    <p class="text-slate-300">{{ analysisResults.summary }}</p>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-4">Key Insights</h3>
+            <div class="issues-list">
+                <div class="issue-card" *ngFor="let issue of analysisResults.issues"
+                    [ngClass]="{'severity-high': issue.severity === 'High', 'severity-medium': issue.severity === 'Medium', 'severity-low': issue.severity === 'Low'}">
+                    <div class="issue-header">
+                        <span class="issue-title">{{ issue.title }}</span>
+                        <span class="timestamp-badge">{{ issue.timestamp }}</span>
+                    </div>
+                    <p class="issue-description">{{ issue.description }}</p>
+                    <div class="recommendation-box">
+                        <span class="bulb-icon">💡</span>
+                        <span class="recommendation-text">{{ issue.recommendation }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <button class="reset-btn" (click)="resetAnalysis()">Analyze Another Video</button>
+            </div>
+        </div>
+    </div>
+</div>

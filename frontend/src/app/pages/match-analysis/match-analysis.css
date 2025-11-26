@@ -1,0 +1,219 @@
+.analysis-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #34d399, #10b981);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.25rem;
+    color: #94a3b8;
+    font-family: monospace;
+}
+
+.upload-box {
+    background: rgba(30, 41, 59, 0.5);
+    border: 2px dashed rgba(52, 211, 153, 0.3);
+    border-radius: 1.5rem;
+    padding: 4rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+    border-color: rgba(52, 211, 153, 0.8);
+    background: rgba(30, 41, 59, 0.8);
+}
+
+.upload-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+.upload-btn {
+    background: #10b981;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.status-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(52, 211, 153, 0.2);
+    border-radius: 1rem;
+    padding: 3rem;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+.progress-bar-bg {
+    background: rgba(15, 23, 42, 0.5);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, #34d399, #10b981);
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.loader-animation {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    border: 2px solid rgba(52, 211, 153, 0.2);
+    border-radius: 50%;
+}
+
+.scanner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+    background: rgba(52, 211, 153, 0.1);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.score-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(30, 41, 59, 0.6);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.score-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid #10b981;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.score-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #10b981;
+    line-height: 1;
+}
+
+.score-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: #34d399;
+    font-weight: 700;
+}
+
+.issue-card {
+    background: rgba(30, 41, 59, 0.6);
+    border-left: 4px solid;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+.severity-high {
+    border-left-color: #ef4444;
+}
+
+.severity-medium {
+    border-left-color: #f59e0b;
+}
+
+.severity-low {
+    border-left-color: #10b981;
+}
+
+.issue-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.issue-title {
+    font-weight: 700;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.timestamp-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    font-family: monospace;
+}
+
+.issue-description {
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+.recommendation-box {
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.reset-btn {
+    background: transparent;
+    border: 1px solid #475569;
+    color: #94a3b8;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+    border-color: white;
+    color: white;
+}

@@ -1,0 +1,26 @@
+/* Player and Coach Information Card Styling with Shuttle Background */
+.player-info-card,
+.coach-info-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.player-info-card::before,
+.coach-info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2310b981' fill-opacity='1'%3E%3Cpath d='M40 0c-1.105 0-2 .895-2 2v8c0 1.105.895 2 2 2s2-.895 2-2V2c0-1.105-.895-2-2-2zm0 16c-2.21 0-4 1.79-4 4v12c0 2.21 1.79 4 4 4s4-1.79 4-4V20c0-2.21-1.79-4-4-4zm0 24c-3.314 0-6 2.686-6 6 0 2.21 1.79 4 4 4h4c2.21 0 4-1.79 4-4 0-3.314-2.686-6-6-6zm-1 10l-2 4-2 4-2 4c-.553.894-.276 2.067.618 2.618.894.553 2.067.276 2.618-.618L39 58l2.764-6.382c.553-.894.276-2.067-.618-2.618-.894-.553-2.067-.276-2.618.618L37 54l-2-4z'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.player-info-card>* {
+    position: relative;
+    z-index: 1;
+}

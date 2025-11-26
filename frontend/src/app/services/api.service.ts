@@ -6,7 +6,7 @@ import { Observable, tap } from 'rxjs';
     providedIn: 'root'
 })
 export class ApiService {
-    private baseUrl: string = 'http://localhost:8000';
+    private baseUrl: string = 'http://192.168.1.4:8000';
 
     constructor(private http: HttpClient) { }
 
@@ -59,6 +59,19 @@ export class ApiService {
             tap({
                 next: () => console.log(`[ApiService] Upload ${endpoint} completed`),
                 error: (err) => console.error(`[ApiService] Upload ${endpoint} failed`, err)
+            })
+        );
+    }
+
+    getTrainingVideos(): Observable<any[]> {
+        return this.get<any[]>('/training/videos');
+    }
+
+    addTrainingVideo(formData: FormData): Observable<any> {
+        return this.http.post<any>(`${this.baseUrl}/training/videos`, formData).pipe(
+            tap({
+                next: () => console.log(`[ApiService] Add training video completed`),
+                error: (err) => console.error(`[ApiService] Add training video failed`, err)
             })
         );
     }

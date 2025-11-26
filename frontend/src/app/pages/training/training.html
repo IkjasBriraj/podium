@@ -1,0 +1,130 @@
+<div class="training-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Training Hub</h1>
+            <p class="hero-subtitle">Master your skills with expert techniques and drills</p>
+        </div>
+    </div>
+
+    <!-- Training Categories -->
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        <h2 class="section-title">Training Categories</h2>
+        <div class="categories-grid">
+            <div class="category-card" *ngFor="let category of trainingCategories" (click)="onCategoryClick(category)">
+                <div class="category-icon">{{category.icon}}</div>
+                <h3 class="category-title">{{category.title}}</h3>
+                <p class="category-count">{{category.count}} videos</p>
+            </div>
+        </div>
+
+        <!-- Recent Training Videos -->
+        <h2 class="section-title mt-12">Recent Training Videos</h2>
+        <div class="videos-grid">
+            <div class="video-card" *ngFor="let video of recentVideos" (click)="onVideoClick(video)">
+                <div class="video-thumbnail">
+                    <div class="play-button">▶</div>
+                    <div class="video-duration">{{video.duration}}</div>
+                    <img *ngIf="video.thumbnail_url" [src]="video.thumbnail_url" alt="Thumbnail"
+                        class="absolute inset-0 w-full h-full object-cover -z-10 opacity-60">
+                    <div *ngIf="!video.thumbnail_url"
+                        class="absolute inset-0 w-full h-full bg-slate-800 -z-10 flex items-center justify-center opacity-60">
+                        <span class="text-4xl">🎥</span>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">{{video.title}}</h3>
+                    <p class="video-author">by {{video.author}}</p>
+                    <div class="video-stats">
+                        <div class="training-container">
+                            <!-- Hero Section -->
+                            <div class="hero-section">
+                                <div class="hero-content">
+                                    <h1 class="hero-title">Training Hub</h1>
+                                    <p class="hero-subtitle">Master your skills with expert techniques and drills</p>
+                                </div>
+                            </div>
+
+                            <!-- Training Categories -->
+                            <div class="max-w-6xl mx-auto px-6 py-8">
+                                <h2 class="section-title">Training Categories</h2>
+                                <div class="categories-grid">
+                                    <div class="category-card" *ngFor="let category of trainingCategories"
+                                        (click)="onCategoryClick(category)">
+                                        <div class="category-icon">{{category.icon}}</div>
+                                        <h3 class="category-title">{{category.title}}</h3>
+                                        <p class="category-count">{{category.count}} videos</p>
+                                    </div>
+                                </div>
+
+                                <!-- Recent Training Videos -->
+                                <h2 class="section-title mt-12">Recent Training Videos</h2>
+                                <div class="videos-grid">
+                                    <div class="video-card" *ngFor="let video of recentVideos"
+                                        (click)="onVideoClick(video)">
+                                        <div class="video-thumbnail">
+                                            <div class="play-button">▶</div>
+                                            <div class="video-duration">{{video.duration}}</div>
+                                            <img *ngIf="video.thumbnail_url" [src]="video.thumbnail_url" alt="Thumbnail"
+                                                class="absolute inset-0 w-full h-full object-cover -z-10 opacity-60">
+                                            <div *ngIf="!video.thumbnail_url"
+                                                class="absolute inset-0 w-full h-full bg-slate-800 -z-10 flex items-center justify-center opacity-60">
+                                                <span class="text-4xl">🎥</span>
+                                            </div>
+                                        </div>
+                                        <div class="video-info">
+                                            <h3 class="video-title">{{video.title}}</h3>
+                                            <p class="video-author">by {{video.author}}</p>
+                                            <div class="video-stats">
+                                                <span class="views">👁️ {{video.views}} views</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Upload Training Content -->
+                                <div class="upload-section">
+                                    <div class="upload-card">
+                                        <h3 class="upload-title">Analyze your game with AI Gemini 3.00</h3>
+                                        <p class="upload-subtitle">Help the community by sharing your techniques and
+                                            drills</p>
+
+                                        <div *ngIf="!showUploadForm && !isUploading && !isAnalyzing && !analysisResult">
+                                            <!-- Video Player Modal -->
+                                            <div class="video-modal" *ngIf="selectedVideo" (click)="closeVideo()">
+                                                <div class="modal-content" (click)="$event.stopPropagation()">
+                                                    <button class="close-btn" (click)="closeVideo()">×</button>
+                                                    <div class="video-wrapper">
+                                                        <iframe *ngIf="selectedVideo.type === 'link'"
+                                                            [src]="'https://www.youtube.com/embed/' + selectedVideo.video_url | safe"
+                                                            title="YouTube video player" frameborder="0"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                            allowfullscreen>
+                                                        </iframe>
+                                                        <video *ngIf="selectedVideo.type === 'file'"
+                                                            [src]="'http://192.168.1.4:8000' + selectedVideo.video_url"
+                                                            controls class="w-full h-full bg-black"></video>
+                                                    </div>
+                                                    <div class="modal-info">
+                                                        <h3 class="text-2xl font-bold text-white mb-2">
+                                                            {{selectedVideo.title}}</h3>
+                                                        <p class="text-emerald-400 mb-4">{{selectedVideo.author}}</p>
+                                                        <p class="text-slate-300">{{selectedVideo.description}}</p>
+
+                                                        <!-- Show analysis in modal if available -->
+                                                        <div *ngIf="selectedVideo.analysis"
+                                                            class="mt-4 pt-4 border-t border-slate-700">
+                                                            <h4
+                                                                class="text-emerald-400 font-bold mb-2 text-sm uppercase tracking-wider">
+                                                                AI Analysis</h4>
+                                                            <ul class="space-y-2">
+                                                                <li *ngFor="let issue of selectedVideo.analysis"
+                                                                    class="text-slate-300 text-sm flex gap-2">
+                                                                    <span class="text-emerald-500">•</span> {{issue}}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>

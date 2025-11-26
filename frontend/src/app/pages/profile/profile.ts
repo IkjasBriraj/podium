@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { finalize, timeout } from 'rxjs/operators';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ProfileService, Profile, ProfileUpdateRequest, Post } from '../../services/profile.service';
 
 @Component({
@@ -44,7 +44,26 @@ export class ProfileComponent implements OnInit {
       location: [''],
       category: [''],
       role: [''],
-      sport: ['']
+      sport: [''],
+      // Sport-specific player information
+      age: [null],
+      weight: [''],
+      height: [''],
+      playing_hand: [''],
+      years_of_experience: [null],
+      age_category: [''],
+      academy: [''],
+      // Coach-specific information
+      coaching_license: [''],
+      coaching_experience_years: [null],
+      coaching_specialization: [''],
+      current_organization: [''],
+      coaching_philosophy: [''],
+      age_groups_coached: [''],
+      coaching_achievements: [''],
+
+      skills: this.fb.array([]),
+      experience: this.fb.array([])
     });
   }
 
@@ -87,8 +106,40 @@ export class ProfileComponent implements OnInit {
       location: profile.location || '',
       category: profile.category || '',
       role: profile.role,
-      sport: profile.sport
+      sport: profile.sport,
+      // Sport-specific player information
+      age: profile.age || null,
+      weight: profile.weight || '',
+      height: profile.height || '',
+      playing_hand: profile.playing_hand || '',
+      years_of_experience: profile.years_of_experience || null,
+      age_category: profile.age_category || '',
+      academy: profile.academy || '',
+      // Coach fields
+      coaching_license: profile.coaching_license || '',
+      coaching_experience_years: profile.coaching_experience_years || null,
+      coaching_specialization: profile.coaching_specialization || '',
+      current_organization: profile.current_organization || '',
+      coaching_philosophy: profile.coaching_philosophy || '',
+      age_groups_coached: profile.age_groups_coached || '',
+      coaching_achievements: profile.coaching_achievements || ''
     });
+
+    // Populate Skills
+    const skillFGs = (profile.skills || []).map(s => this.fb.group({
+      name: [s.name, Validators.required],
+      endorsements: [s.endorsements || 0]
+    }));
+    this.profileForm.setControl('skills', this.fb.array(skillFGs));
+
+    // Populate Experience
+    const expFGs = (profile.experience || []).map(e => this.fb.group({
+      role: [e.role, Validators.required],
+      org: [e.org, Validators.required],
+      years: [e.years, Validators.required],
+      description: [e.description || '']
+    }));
+    this.profileForm.setControl('experience', this.fb.array(expFGs));
   }
 
   toggleEditMode() {
@@ -243,7 +294,7 @@ export class ProfileComponent implements OnInit {
       return this.profileImagePreview;
     }
     if (this.profile?.profile_image) {
-      return `http://localhost:8000${this.profile.profile_image}`;
+      return `http://192.168.1.4:8000${this.profile.profile_image}`;
     }
     return '';
   }
@@ -253,7 +304,7 @@ export class ProfileComponent implements OnInit {
       return this.coverImagePreview;
     }
     if (this.profile?.cover_image) {
-      return `http://localhost:8000${this.profile.cover_image}`;
+      return `http://192.168.1.4:8000${this.profile.cover_image}`;
     }
     return '';
   }
@@ -337,5 +388,41 @@ export class ProfileComponent implements OnInit {
 
   getSafeUrl(url: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
+  // --- Helper Methods for Form Arrays ---
+
+  get experienceArray() {
+    return this.profileForm.get('experience') as FormArray;
+  }
+
+  get skillsArray() {
+    return this.profileForm.get('skills') as FormArray;
+  }
+
+  addExperience() {
+    const expGroup = this.fb.group({
+      role: ['', Validators.required],
+      org: ['', Validators.required],
+      years: ['', Validators.required],
+      description: ['']
+    });
+    this.experienceArray.push(expGroup);
+  }
+
+  removeExperience(index: number) {
+    this.experienceArray.removeAt(index);
+  }
+
+  addSkill() {
+    const skillGroup = this.fb.group({
+      name: ['', Validators.required],
+      endorsements: [0]
+    });
+    this.skillsArray.push(skillGroup);
+  }
+
+  removeSkill(index: number) {
+    this.skillsArray.removeAt(index);
   }
 }
