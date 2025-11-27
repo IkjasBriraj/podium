@@ -88,6 +88,9 @@ export class ProfileComponent implements OnInit {
       next: (profile: Profile) => {
         console.log('Profile loaded successfully:', profile);
         this.profile = profile;
+        // Ensure skills and experience are always arrays
+        this.profile.skills = this.profile.skills || [];
+        this.profile.experience = this.profile.experience || [];
         this.populateForm(profile);
         this.cdr.detectChanges();
       },
@@ -242,6 +245,33 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  async onCoverImageChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      // Optimistic update / Preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.coverImagePreview = e.target?.result as string;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+
+      try {
+        await this.uploadCoverImage(file);
+        // Clear preview after successful upload as the profile data is updated
+        this.coverImagePreview = null;
+        this.cdr.detectChanges();
+      } catch (error) {
+        console.error('Failed to upload cover image', error);
+        alert('Failed to upload cover image');
+        this.coverImagePreview = null; // Revert on error
+        this.cdr.detectChanges();
+      }
+    }
+  }
+
   onCoverImageSelect(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -294,7 +324,7 @@ export class ProfileComponent implements OnInit {
       return this.profileImagePreview;
     }
     if (this.profile?.profile_image) {
-      return `http://192.168.1.4:8000${this.profile.profile_image}`;
+      return `${this.profile.profile_image}`;
     }
     return '';
   }
@@ -304,7 +334,7 @@ export class ProfileComponent implements OnInit {
       return this.coverImagePreview;
     }
     if (this.profile?.cover_image) {
-      return `http://192.168.1.4:8000${this.profile.cover_image}`;
+      return `${this.profile.cover_image}`;
     }
     return '';
   }

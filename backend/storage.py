@@ -24,7 +24,7 @@ class Storage:
             self.bucket_name = None
             self.enabled = False
 
-    def upload_file(self, file: UploadFile, folder: str = "uploads") -> str:
+    def upload_file(self, file: UploadFile, folder: str = "uploads", custom_filename: str = None) -> str:
         if not self.enabled:
             raise HTTPException(
                 status_code=503,
@@ -32,14 +32,18 @@ class Storage:
             )
         
         try:
-            file_extension = os.path.splitext(file.filename)[1]
-            filename = f"{folder}/{uuid.uuid4()}{file_extension}"
+            # Use custom filename if provided, otherwise generate UUID
+            if custom_filename:
+                filename = f"{folder}/{custom_filename}"
+            else:
+                file_extension = os.path.splitext(file.filename)[1]
+                filename = f"{folder}/{uuid.uuid4()}{file_extension}"
             
             self.s3_client.upload_fileobj(
                 file.file,
                 self.bucket_name,
                 filename,
-                ExtraArgs={'ACL': 'public-read', 'ContentType': file.content_type}
+                ExtraArgs={'ContentType': file.content_type}
             )
             
             # Construct public URL

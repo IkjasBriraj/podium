@@ -43,6 +43,7 @@ export class TrainingComponent implements OnInit {
     };
 
     recentVideos: any[] = [];
+    allVideos: any[] = [];
 
     ngOnInit() {
         this.loadVideos();
@@ -51,6 +52,7 @@ export class TrainingComponent implements OnInit {
     loadVideos() {
         this.apiService.getTrainingVideos().subscribe({
             next: (videos) => {
+                this.allVideos = videos;
                 this.recentVideos = videos;
             },
             error: (err) => console.error('Failed to load videos', err)
@@ -66,11 +68,22 @@ export class TrainingComponent implements OnInit {
     }
 
     onCategoryClick(category: any) {
-        if (category.title === 'Match Analysis') {
+        if (category.route === 'analysis') {
             this.router.navigate(['/app/training/analysis']);
-        } else {
-            console.log('Clicked category:', category.title);
-            alert(`Opening ${category.title} section... (Coming Soon)`);
+            return;
+        }
+
+        // Filter videos based on category
+        if (this.allVideos.length > 0) {
+            this.recentVideos = this.allVideos.filter(video =>
+                video.categories && video.categories.includes(category.route)
+            );
+
+            // Optional: Scroll to videos section
+            const videosSection = document.querySelector('.videos-grid');
+            if (videosSection) {
+                videosSection.scrollIntoView({ behavior: 'smooth' });
+            }
         }
     }
 

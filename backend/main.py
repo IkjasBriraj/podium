@@ -4,6 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, BeforeValidator
 from typing_extensions import Annotated
 import os
+import traceback
 import uuid
 from backend.database import db
 from backend.storage import storage
@@ -118,6 +119,7 @@ class TrainingVideo(BaseModel):
     duration: Optional[str] = "00:00"
     views: Optional[str] = "0"
     type: str = "link"
+    categories: List[str] = []
     analysis: Optional[List[str]] = None
 
 # --- Helper Functions ---
@@ -209,20 +211,30 @@ async def update_profile(user_id: str, profile: ProfileUpdateRequest):
 @app.post("/profiles/{user_id}/image")
 async def upload_profile_image(user_id: str, file: UploadFile = File(...)):
     validate_media_file(file)
-    
+   
     # Verify user exists
     user = await db.get_db()["users"].find_one({"_id": user_id})
+    print(f"IN upload_profile_image: {user_id}, user: {user}")
     if not user:
         raise HTTPException(status_code=404, detail="Profile not found")
     
-    # Upload to S3
-    image_url = storage.upload_file(file, folder="profiles")
-    
-    # Update DB
-    await db.get_db()["users"].update_one(
-        {"_id": user_id},
-        {"$set": {"profile_image": image_url}}
-    )
+    try:
+        # Generate consistent filename so new uploads overwrite old ones
+        file_extension = os.path.splitext(file.filename)[1]
+        custom_filename = f"{user_id}_profile{file_extension}"
+        
+        # Upload to S3 with custom filename (overwrites if exists)
+        image_url = storage.upload_file(file, folder="profiles", custom_filename=custom_filename)
+        print(f"IN upload_profile_image: image_url: {image_url}")
+        
+        # Update DB
+        await db.get_db()["users"].update_one(
+            {"_id": user_id},
+            {"$set": {"profile_image": image_url}}
+        )
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
     
     return {"message": "Profile image uploaded", "image_url": image_url}
 
@@ -234,12 +246,22 @@ async def upload_cover_image(user_id: str, file: UploadFile = File(...)):
     if not user:
         raise HTTPException(status_code=404, detail="Profile not found")
     
-    image_url = storage.upload_file(file, folder="covers")
-    
-    await db.get_db()["users"].update_one(
-        {"_id": user_id},
-        {"$set": {"cover_image": image_url}}
-    )
+    try:
+        # Generate consistent filename so new uploads overwrite old ones
+        file_extension = os.path.splitext(file.filename)[1]
+        custom_filename = f"{user_id}_cover{file_extension}"
+        
+        # Upload to S3 with custom filename (overwrites if exists)
+        image_url = storage.upload_file(file, folder="covers", custom_filename=custom_filename)
+        
+        # Update DB
+        await db.get_db()["users"].update_one(
+            {"_id": user_id},
+            {"$set": {"cover_image": image_url}}
+        )
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
     
     return {"message": "Cover image uploaded", "image_url": image_url}
 
