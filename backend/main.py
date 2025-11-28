@@ -55,6 +55,8 @@ class User(BaseModel):
     category: Optional[str] = None
     profile_image: Optional[str] = None
     cover_image: Optional[str] = None
+    email: Optional[str] = None
+    username: Optional[str] = None
     # Sport-specific
     age: Optional[int] = None
     weight: Optional[str] = None

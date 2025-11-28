@@ -496,32 +496,13 @@
                                 <div>
                                     <p class="text-white font-bold text-sm">{{ profile.name }}</p>
                                     <p class="text-slate-500 text-xs">Just now</p>
+
+                                    <div *ngIf="posts.length === 0" class="text-center py-8 text-slate-500">
+                                        No posts yet.
+                                    </div>
                                 </div>
                             </div>
-
-                            <p class="text-slate-300 text-sm mb-3 whitespace-pre-wrap">{{ post.content }}</p>
-
-                            <div *ngIf="post.media_url"
-                                class="rounded-lg overflow-hidden border border-slate-700 bg-black">
-                                <img *ngIf="post.type === 'image'" [src]="'http://192.168.1.4:8000' + post.media_url"
-                                    class="w-full max-h-96 object-contain">
-                                <video *ngIf="post.type === 'video'"
-                                    [src]="getSafeUrl('http://192.168.1.4:8000' + post.media_url)"
-                                    class="w-full max-h-96" controls></video>
-                            </div>
-
-                            <div class="flex gap-4 mt-3 text-slate-400 text-sm">
-                                <button class="hover:text-emerald-400">❤️ {{ post.likes }} Likes</button>
-                                <button class="hover:text-emerald-400">💬 {{ post.comments }} Comments</button>
-                            </div>
-                        </div>
-
-                        <div *ngIf="posts.length === 0" class="text-center py-8 text-slate-500">
-                            No posts yet.
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>

@@ -1,24 +1,47 @@
 <div class="max-w-3xl mx-auto">
     <!-- Create Post -->
-    <div class="bg-slate-800 rounded-xl p-4 mb-6 border border-slate-700">
+    <div *ngIf="currentUser" class="bg-slate-800 rounded-xl p-4 mb-6 border border-slate-700">
         <div class="flex space-x-4">
-            <div class="w-12 h-12 bg-slate-600 rounded-full flex-shrink-0"></div>
+            <div class="w-12 h-12 bg-slate-600 rounded-full flex-shrink-0 overflow-hidden">
+                <img *ngIf="currentUser.profile_image" [src]="currentUser.profile_image" [alt]="currentUser.name"
+                    class="w-full h-full object-cover">
+            </div>
             <div class="flex-1">
-                <textarea
+                <textarea [(ngModel)]="newPostContent"
                     class="w-full bg-slate-900 text-white rounded-lg p-3 border border-slate-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none resize-none"
                     rows="3" placeholder="Share your training progress, techniques, or thoughts..."></textarea>
+
+                <!-- Media Preview -->
+                <div *ngIf="mediaPreview" class="mt-3 relative inline-block">
+                    <img *ngIf="!selectedMedia?.type?.startsWith('video')" [src]="mediaPreview"
+                        class="max-h-48 rounded-lg border border-slate-700">
+                    <video *ngIf="selectedMedia?.type?.startsWith('video')" [src]="mediaPreview"
+                        class="max-h-48 rounded-lg border border-slate-700" controls></video>
+                    <button (click)="removeMedia()"
+                        class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+
                 <div class="flex justify-between items-center mt-3">
                     <div class="flex space-x-2 text-slate-400">
-                        <button class="hover:text-emerald-400 transition flex items-center space-x-1">
+                        <input type="file" id="feed-media-input" class="hidden" (change)="onMediaSelect($event)">
+                        <button (click)="triggerFileInput('image')"
+                            class="hover:text-emerald-400 transition flex items-center space-x-1">
                             <span>📷</span> <span class="text-sm">Media</span>
                         </button>
-                        <button class="hover:text-emerald-400 transition flex items-center space-x-1">
+                        <button (click)="triggerFileInput('video')"
+                            class="hover:text-emerald-400 transition flex items-center space-x-1">
                             <span>🎥</span> <span class="text-sm">Video</span>
                         </button>
                     </div>
-                    <button
-                        class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2 px-6 rounded-full transition text-sm">
-                        Post
+                    <button (click)="createPost()" [disabled]="(!newPostContent && !selectedMedia) || isPosting"
+                        class="bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2 px-6 rounded-full transition text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                        {{ isPosting ? 'Posting...' : 'Post' }}
                     </button>
                 </div>
             </div>
@@ -45,31 +68,39 @@
         </a>
     </div>
 
-    <!-- Post 1 -->
-    <div class="bg-slate-800 rounded-xl p-6 mb-6 border border-slate-700">
+    <!-- Posts Feed -->
+    <div *ngFor="let post of posts" class="bg-slate-800 rounded-xl p-6 mb-6 border border-slate-700">
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-slate-600 rounded-full"></div>
+                <div class="w-10 h-10 bg-slate-600 rounded-full overflow-hidden">
+                    <!-- We need to fetch author details or include them in post response. For now, using placeholder or if it's current user -->
+                    <!-- Ideally backend should populate author info. Assuming simple display for now -->
+                    <div class="w-full h-full bg-slate-500 flex items-center justify-center text-xs text-white">
+                        {{ post.author_id.substring(0, 2).toUpperCase() }}
+                    </div>
+                </div>
                 <div>
-                    <h3 class="font-bold text-white">Lee Chong Wei</h3>
-                    <p class="text-xs text-slate-400">Badminton • 2h ago</p>
+                    <h3 class="font-bold text-white">{{ post.author_id }}</h3> <!-- Should be author name -->
+                    <p class="text-xs text-slate-400 capitalize">{{ post.type }} • Recent</p>
                 </div>
             </div>
             <button class="text-slate-400 hover:text-white">•••</button>
         </div>
-        <p class="text-slate-300 mb-4">
-            The key to a powerful smash isn't just arm strength, it's the rotation of your hips and the snap of your
-            wrist. Here's a slow-mo breakdown of my technique from yesterday's training. 🏸 #Badminton #Training #Smash
-        </p>
-        <div class="bg-slate-900 h-64 rounded-lg mb-4 flex items-center justify-center text-slate-500">
-            Video Player Placeholder
+        <p class="text-slate-300 mb-4 whitespace-pre-wrap">{{ post.content }}</p>
+
+        <!-- Media Display -->
+        <div *ngIf="post.media_url"
+            class="bg-slate-900 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
+            <img *ngIf="post.type === 'image'" [src]="post.media_url" class="max-h-96 w-auto object-contain">
+            <video *ngIf="post.type === 'video'" [src]="post.media_url" controls class="max-h-96 w-full"></video>
         </div>
+
         <div class="flex items-center justify-between text-slate-400 text-sm border-t border-slate-700 pt-4">
             <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
-                <span>👍</span> <span>1.2k Likes</span>
+                <span>👍</span> <span>{{ post.likes }} Likes</span>
             </button>
             <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
-                <span>💬</span> <span>45 Comments</span>
+                <span>💬</span> <span>{{ post.comments }} Comments</span>
             </button>
             <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
                 <span>↗️</span> <span>Share</span>
@@ -77,31 +108,13 @@
         </div>
     </div>
 
-    <!-- Post 2 -->
-    <div class="bg-slate-800 rounded-xl p-6 mb-6 border border-slate-700">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-blue-600 rounded-full"></div>
-                <div>
-                    <h3 class="font-bold text-white">Carolina Marin</h3>
-                    <p class="text-xs text-slate-400">Badminton • 5h ago</p>
-                </div>
-            </div>
-            <button class="text-slate-400 hover:text-white">•••</button>
-        </div>
-        <p class="text-slate-300 mb-4">
-            Recovery is just as important as training. Ice bath session after a long week of drills. 🧊🥶
-        </p>
-        <div class="flex items-center justify-between text-slate-400 text-sm border-t border-slate-700 pt-4">
-            <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
-                <span>👍</span> <span>850 Likes</span>
-            </button>
-            <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
-                <span>💬</span> <span>23 Comments</span>
-            </button>
-            <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
-                <span>↗️</span> <span>Share</span>
-            </button>
-        </div>
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-8 text-slate-400">
+        Loading posts...
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && posts.length === 0" class="text-center py-8 text-slate-400">
+        No posts yet. Be the first to share something!
     </div>
 </div>

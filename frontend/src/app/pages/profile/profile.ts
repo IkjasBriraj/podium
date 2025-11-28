@@ -4,6 +4,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { finalize, timeout } from 'rxjs/operators';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ProfileService, Profile, ProfileUpdateRequest, Post } from '../../services/profile.service';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +19,7 @@ export class ProfileComponent implements OnInit {
   isLoading: boolean = false;
   error: string | null = null;
   profileForm: FormGroup;
-  currentUserId: string = 'u1'; // Hardcoded for now; will use auth service later
+  currentUserId: string | null = null;
 
   profileImagePreview: string | null = null;
   coverImagePreview: string | null = null;
@@ -33,9 +35,11 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
@@ -68,6 +72,15 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Get current user from auth service
+    this.currentUserId = this.authService.getUserId();
+
+    if (!this.currentUserId) {
+      // No user logged in, redirect to auth
+      this.router.navigate(['/auth']);
+      return;
+    }
+
     this.loadProfile();
     this.loadPosts();
   }
@@ -77,7 +90,7 @@ export class ProfileComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.profileService.getProfile(this.currentUserId).pipe(
+    this.profileService.getProfile(this.currentUserId!).pipe(
       timeout(5000), // Timeout after 5 seconds
       finalize(() => {
         this.isLoading = false;
@@ -180,7 +193,7 @@ export class ProfileComponent implements OnInit {
       // Update profile data
       const updateData: ProfileUpdateRequest = this.profileForm.value;
 
-      this.profileService.updateProfile(this.currentUserId, updateData).subscribe({
+      this.profileService.updateProfile(this.currentUserId!, updateData).subscribe({
         next: (updatedProfile) => {
           this.profile = updatedProfile;
           this.isEditing = false;
@@ -289,7 +302,7 @@ export class ProfileComponent implements OnInit {
 
   uploadProfileImage(file: File): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.profileService.uploadProfileImage(this.currentUserId, file).subscribe({
+      this.profileService.uploadProfileImage(this.currentUserId!, file).subscribe({
         next: (response) => {
           if (this.profile) {
             this.profile.profile_image = response.image_url;
@@ -305,7 +318,7 @@ export class ProfileComponent implements OnInit {
 
   uploadCoverImage(file: File): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.profileService.uploadCoverImage(this.currentUserId, file).subscribe({
+      this.profileService.uploadCoverImage(this.currentUserId!, file).subscribe({
         next: (response) => {
           if (this.profile) {
             this.profile.cover_image = response.image_url;
@@ -342,7 +355,7 @@ export class ProfileComponent implements OnInit {
   // --- Posts ---
 
   loadPosts() {
-    this.profileService.getUserPosts(this.currentUserId).subscribe({
+    this.profileService.getUserPosts(this.currentUserId!).subscribe({
       next: (posts) => {
         this.posts = posts;
         this.cdr.detectChanges();
@@ -373,7 +386,7 @@ export class ProfileComponent implements OnInit {
     this.isPosting = true;
     const type = this.selectedMedia?.type.startsWith('video') ? 'video' : (this.selectedMedia ? 'image' : 'text');
 
-    this.profileService.createPost(this.currentUserId, this.newPostContent, type, this.selectedMedia || undefined)
+    this.profileService.createPost(this.currentUserId!, this.newPostContent, type, this.selectedMedia || undefined)
       .pipe(finalize(() => {
         this.isPosting = false;
         this.cdr.detectChanges();

@@ -1,0 +1,205 @@
+======================================================================
+MOCK DATA SEEDING REPORT
+======================================================================
+
+📊 DATABASE SUMMARY
+----------------------------------------------------------------------
+  • Users: 7 (5 athletes + 2 coaches)
+  • Posts: 14
+  • Training Videos: 8
+  • Opportunities: 5
+
+======================================================================
+👥 USER PROFILES
+======================================================================
+
+🏸 ATHLETES (5)
+----------------------------------------------------------------------
+
+1. PV Sindhu
+   ID: athlete1
+   Username: pvsindhu
+   Email: pv.sindhu@podium.com
+   Headline: Olympic Gold & Silver Medalist | BWF World Champion
+   Location: Hyderabad, India
+   Age: 28 | Height: 179 cm | Weight: 65 kg
+   Playing Hand: Right
+   Experience: 18 years
+   Academy: Prakash Padukone Badminton Academy
+   Skills: 4 skills
+
+2. Kento Momota
+   ID: athlete2
+   Username: kmomota
+   Email: k.momota@podium.com
+   Headline: Former World No. 1 | BWF World Champion 2018 & 2019
+   Location: Tokyo, Japan
+   Age: 29 | Height: 175 cm | Weight: 68 kg
+   Playing Hand: Right
+   Experience: 16 years
+   Academy: NTT East Badminton Club
+   Skills: 4 skills
+
+3. An Se Young
+   ID: athlete3
+   Username: cseyoung
+   Email: an.seyoung@podium.com
+   Headline: World No. 1 | BWF World Champion 2023
+   Location: Seoul, South Korea
+   Age: 21 | Height: 169 cm | Weight: 59 kg
+   Playing Hand: Right
+   Experience: 9 years
+   Academy: Samsung Electro-Mechanics Sports Team
+   Skills: 4 skills
+
+4. Viktor Axelsen
+   ID: athlete4
+   Username: vaxelsen
+   Email: v.axelsen@podium.com
+   Headline: Olympic Gold Medalist | World No. 1 | BWF World Champion
+   Location: Dubai, UAE
+   Age: 30 | Height: 194 cm | Weight: 88 kg
+   Playing Hand: Right
+   Experience: 17 years
+   Academy: Dubai Badminton Academy
+   Skills: 4 skills
+
+5. Lee Chong Wei
+   ID: athlete5
+   Username: lcwei
+   Email: lc.wei@podium.com
+   Headline: 3x Olympic Silver Medalist | Former World No. 1 for 349 weeks
+   Location: Kuala Lumpur, Malaysia
+   Age: 41 | Height: 172 cm | Weight: 60 kg
+   Playing Hand: Right
+   Experience: 25 years
+   Academy: Bukit Jalil Sports School
+   Skills: 4 skills
+
+🎓 COACHES (2)
+----------------------------------------------------------------------
+
+1. Pullela Gopichand
+   ID: coach1
+   Username: pmgopichand
+   Email: p.gopichand@podium.com
+   Headline: Chief National Coach of India | Padma Bhushan Awardee
+   Location: Hyderabad, India
+   Experience: 30 years
+   Academy: Gopichand Badminton Academy
+   Skills: 4 skills
+
+2. Park Joo-bong
+   ID: coach2
+   Username: parkjungbong
+   Email: park.jungbong@podium.com
+   Headline: Legendary Doubles Champion | National Coach
+   Location: Seoul, South Korea
+   Experience: 40 years
+   Academy: Korea National Training Center
+   Skills: 4 skills
+
+======================================================================
+🔐 LOGIN CREDENTIALS
+======================================================================
+
+Password for ALL users: password123
+
+Athletes:
+----------------------------------------------------------------------
+  Username: pvsindhu             | Email: pv.sindhu@podium.com                | PV Sindhu
+  Username: kmomota              | Email: k.momota@podium.com                 | Kento Momota
+  Username: cseyoung             | Email: an.seyoung@podium.com               | An Se Young
+  Username: vaxelsen             | Email: v.axelsen@podium.com                | Viktor Axelsen
+  Username: lcwei                | Email: lc.wei@podium.com                   | Lee Chong Wei
+
+Coaches:
+----------------------------------------------------------------------
+  Username: pmgopichand          | Email: p.gopichand@podium.com              | Pullela Gopichand
+  Username: parkjungbong         | Email: park.jungbong@podium.com            | Park Joo-bong
+
+======================================================================
+📝 POSTS SUMMARY
+======================================================================
+
+  PV Sindhu                      - 2 posts
+  Kento Momota                   - 2 posts
+  An Se Young                    - 2 posts
+  Viktor Axelsen                 - 2 posts
+  Lee Chong Wei                  - 2 posts
+  Pullela Gopichand              - 2 posts
+  Park Joo-bong                  - 2 posts
+
+======================================================================
+🎥 TRAINING VIDEOS
+======================================================================
+
+1. Advanced Footwork Drills
+   Author: An Se Young | Views: 1.2M | Duration: 10:15
+   Categories: footwork, technique
+
+2. Ultimate Smash Masterclass
+   Author: Lee Chong Wei | Views: 3.5M | Duration: 12:45
+   Categories: technique, smash
+
+3. Net Play Secrets
+   Author: Kento Momota | Views: 890K | Duration: 08:30
+   Categories: technique, net-play
+
+4. Master Footwork
+   Author: Lin Dan | Views: 2.1M | Duration: 15:20
+   Categories: footwork
+
+5. 4 Corner Footwork Tutorial
+   Author: Badminton Insight | Views: 560K | Duration: 09:45
+   Categories: footwork, training
+
+6. Offensive Net Footwork
+   Author: Basicfeather | Views: 320K | Duration: 07:12
+   Categories: footwork, attack
+
+7. Doubles Strategy Masterclass
+   Author: Park Joo-bong | Views: 780K | Duration: 14:30
+   Categories: doubles, strategy
+
+8. Mental Toughness in Badminton
+   Author: Pullela Gopichand | Views: 650K | Duration: 11:20
+   Categories: mental, coaching
+
+======================================================================
+💼 OPPORTUNITIES
+======================================================================
+
+1. Sponsorship Opportunity for Rising Stars
+   Type: sponsorship | Posted by: Pullela Gopichand
+   Budget: Full scholarship + stipend
+   Requirements: 4 items
+
+2. Training Camp in Dubai
+   Type: training | Posted by: Viktor Axelsen
+   Budget: $5000 per month
+   Requirements: 4 items
+
+3. Doubles Coaching Program
+   Type: coaching | Posted by: Park Joo-bong
+   Budget: ₩10,000,000 per season
+   Requirements: 4 items
+
+4. Brand Ambassador - Sports Nutrition
+   Type: sponsorship | Posted by: PV Sindhu
+   Budget: $3000-$5000 per month
+   Requirements: 4 items
+
+5. Mentorship Program for Young Players
+   Type: mentorship | Posted by: Lee Chong Wei
+   Budget: Subsidized rates available
+   Requirements: 4 items
+
+======================================================================
+✅ ALL DATA SUCCESSFULLY SEEDED!
+======================================================================
+
+Storage Information:
+  • Database: MongoDB (podium_db)
+  • Images: External URLs (profile/cover images)
+  • S3 Bucket: Ready for file uploads
