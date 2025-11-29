@@ -84,6 +84,7 @@ export interface ImageUploadResponse {
 
 export interface Post {
     id: string;
+    _id?: string;
     author_id: string;
     content: string;
     media_url?: string;
@@ -139,4 +140,24 @@ export class ProfileService {
     getUserPosts(userId: string): Observable<Post[]> {
         return this.apiService.get<Post[]>(`/users/${userId}/posts`);
     }
+
+    likePost(postId: string): Observable<{ likes: number }> {
+        return this.apiService.post<{ likes: number }>(`/posts/${postId}/like`, {});
+    }
+
+    getComments(postId: string): Observable<Comment[]> {
+        return this.apiService.get<Comment[]>(`/posts/${postId}/comments`);
+    }
+
+    addComment(postId: string, authorId: string, content: string): Observable<Comment> {
+        return this.apiService.post<Comment>(`/posts/${postId}/comments`, { author_id: authorId, content });
+    }
+}
+
+export interface Comment {
+    id: string;
+    post_id: string;
+    author_id: string;
+    content: string;
+    created_at: string;
 }

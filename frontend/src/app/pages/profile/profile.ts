@@ -193,22 +193,24 @@ export class ProfileComponent implements OnInit {
       // Update profile data
       const updateData: ProfileUpdateRequest = this.profileForm.value;
 
-      this.profileService.updateProfile(this.currentUserId!, updateData).subscribe({
-        next: (updatedProfile) => {
-          this.profile = updatedProfile;
-          this.isEditing = false;
-          this.isLoading = false;
-          this.selectedProfileImage = null;
-          this.selectedCoverImage = null;
-          this.profileImagePreview = null;
-          this.coverImagePreview = null;
-        },
-        error: (err) => {
-          this.error = 'Failed to update profile. Please try again.';
-          console.error('Profile update error:', err);
-          this.isLoading = false;
-        }
-      });
+      this.profileService.updateProfile(this.currentUserId!, updateData)
+        .pipe(timeout(10000))
+        .subscribe({
+          next: (updatedProfile) => {
+            this.profile = updatedProfile;
+            this.isEditing = false;
+            this.isLoading = false;
+            this.selectedProfileImage = null;
+            this.selectedCoverImage = null;
+            this.profileImagePreview = null;
+            this.coverImagePreview = null;
+          },
+          error: (err) => {
+            this.error = 'Failed to update profile. Please try again.';
+            console.error('Profile update error:', err);
+            this.isLoading = false;
+          }
+        });
     } catch (err) {
       this.error = 'Failed to upload images. Please try again.';
       console.error('Image upload error:', err);
@@ -302,33 +304,37 @@ export class ProfileComponent implements OnInit {
 
   uploadProfileImage(file: File): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.profileService.uploadProfileImage(this.currentUserId!, file).subscribe({
-        next: (response) => {
-          if (this.profile) {
-            this.profile.profile_image = response.image_url;
+      this.profileService.uploadProfileImage(this.currentUserId!, file)
+        .pipe(timeout(10000))
+        .subscribe({
+          next: (response) => {
+            if (this.profile) {
+              this.profile.profile_image = response.image_url;
+            }
+            resolve();
+          },
+          error: (err) => {
+            reject(err);
           }
-          resolve();
-        },
-        error: (err) => {
-          reject(err);
-        }
-      });
+        });
     });
   }
 
   uploadCoverImage(file: File): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.profileService.uploadCoverImage(this.currentUserId!, file).subscribe({
-        next: (response) => {
-          if (this.profile) {
-            this.profile.cover_image = response.image_url;
+      this.profileService.uploadCoverImage(this.currentUserId!, file)
+        .pipe(timeout(10000))
+        .subscribe({
+          next: (response) => {
+            if (this.profile) {
+              this.profile.cover_image = response.image_url;
+            }
+            resolve();
+          },
+          error: (err) => {
+            reject(err);
           }
-          resolve();
-        },
-        error: (err) => {
-          reject(err);
-        }
-      });
+        });
     });
   }
 
@@ -357,7 +363,7 @@ export class ProfileComponent implements OnInit {
   loadPosts() {
     this.profileService.getUserPosts(this.currentUserId!).subscribe({
       next: (posts) => {
-        this.posts = posts;
+        this.posts = posts.map(p => ({ ...p, id: p.id || p._id! }));
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error loading posts:', err)
@@ -393,7 +399,8 @@ export class ProfileComponent implements OnInit {
       }))
       .subscribe({
         next: (post) => {
-          this.posts.unshift(post);
+          const newPost = { ...post, id: post.id || post._id! };
+          this.posts.unshift(newPost);
           this.newPostContent = '';
           this.selectedMedia = null;
           this.mediaPreview = null;

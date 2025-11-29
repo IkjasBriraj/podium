@@ -73,14 +73,12 @@
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-slate-600 rounded-full overflow-hidden">
-                    <!-- We need to fetch author details or include them in post response. For now, using placeholder or if it's current user -->
-                    <!-- Ideally backend should populate author info. Assuming simple display for now -->
                     <div class="w-full h-full bg-slate-500 flex items-center justify-center text-xs text-white">
                         {{ post.author_id.substring(0, 2).toUpperCase() }}
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-white">{{ post.author_id }}</h3> <!-- Should be author name -->
+                    <h3 class="font-bold text-white">{{ post.author_id }}</h3>
                     <p class="text-xs text-slate-400 capitalize">{{ post.type }} • Recent</p>
                 </div>
             </div>
@@ -96,15 +94,42 @@
         </div>
 
         <div class="flex items-center justify-between text-slate-400 text-sm border-t border-slate-700 pt-4">
-            <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
+            <button (click)="likePost(post)" class="flex items-center space-x-2 hover:text-emerald-400 transition">
                 <span>👍</span> <span>{{ post.likes }} Likes</span>
             </button>
-            <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
+            <button (click)="toggleComments(post)"
+                class="flex items-center space-x-2 hover:text-emerald-400 transition">
                 <span>💬</span> <span>{{ post.comments }} Comments</span>
             </button>
             <button class="flex items-center space-x-2 hover:text-emerald-400 transition">
                 <span>↗️</span> <span>Share</span>
             </button>
+        </div>
+
+        <!-- Comments Section -->
+        <div *ngIf="isCommentsExpanded(post.id)" class="mt-4 border-t border-slate-700 pt-4">
+            <div *ngIf="loadingComments.has(post.id)" class="text-slate-500 text-sm mb-2">Loading comments...</div>
+
+            <div *ngIf="postComments[post.id]?.length === 0 && !loadingComments.has(post.id)"
+                class="text-slate-500 text-sm mb-2">
+                No comments yet.
+            </div>
+
+            <div *ngFor="let comment of postComments[post.id]" class="mb-3 text-sm">
+                <span class="font-bold text-white">{{ comment.author_id }}</span>
+                <span class="text-slate-300 ml-2">{{ comment.content }}</span>
+            </div>
+
+            <!-- Add Comment -->
+            <div class="flex gap-2 mt-4">
+                <input type="text" [(ngModel)]="commentInputs[post.id]"
+                    class="flex-1 bg-slate-900 border border-slate-700 rounded-full px-4 py-2 text-sm text-white focus:border-emerald-500 outline-none"
+                    placeholder="Write a comment...">
+                <button (click)="submitComment(post)" [disabled]="!commentInputs[post.id]"
+                    class="bg-emerald-500 text-slate-900 font-bold px-4 py-2 rounded-full text-sm hover:bg-emerald-600 disabled:opacity-50">
+                    Send
+                </button>
+            </div>
         </div>
     </div>
 

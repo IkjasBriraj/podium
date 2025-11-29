@@ -24,6 +24,12 @@ export class FeedComponent implements OnInit {
   mediaPreview: string | null = null;
   isPosting: boolean = false;
 
+  // Comments State
+  expandedComments: Set<string> = new Set();
+  postComments: { [postId: string]: any[] } = {};
+  commentInputs: { [postId: string]: string } = {};
+  loadingComments: Set<string> = new Set();
+
   constructor(
     private profileService: ProfileService,
     private authService: AuthService,
@@ -47,7 +53,7 @@ export class FeedComponent implements OnInit {
       })
     ).subscribe({
       next: (posts) => {
-        this.posts = posts;
+        this.posts = posts.map(p => ({ ...p, id: p.id || p._id! }));
       },
       error: (err) => console.error('Error loading feed:', err)
     });
@@ -100,11 +106,80 @@ export class FeedComponent implements OnInit {
       }))
       .subscribe({
         next: (post) => {
-          this.posts.unshift(post);
+          const newPost = { ...post, id: post.id || post._id! };
+          this.posts.unshift(newPost);
           this.newPostContent = '';
           this.removeMedia();
         },
         error: (err) => console.error('Error creating post:', err)
       });
+  }
+
+  likePost(post: Post) {
+    this.profileService.likePost(post.id).subscribe({
+      next: (response) => {
+        post.likes = response.likes;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error liking post:', err);
+        alert('Failed to like post. Please try again.');
+      }
+    });
+  }
+
+  toggleComments(post: Post) {
+    if (this.expandedComments.has(post.id)) {
+      this.expandedComments.delete(post.id);
+    } else {
+      this.expandedComments.add(post.id);
+      if (!this.postComments[post.id]) {
+        this.loadComments(post.id);
+      }
+    }
+  }
+
+  loadComments(postId: string) {
+    this.loadingComments.add(postId);
+    this.profileService.getComments(postId)
+      .pipe(finalize(() => {
+        this.loadingComments.delete(postId);
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (comments) => {
+          this.postComments[postId] = comments;
+        },
+        error: (err) => console.error('Error loading comments:', err)
+      });
+  }
+
+  submitComment(post: Post) {
+    if (!this.currentUser) {
+      alert('Please login to comment.');
+      return;
+    }
+    const content = this.commentInputs[post.id];
+    if (!content || !content.trim()) return;
+
+    this.profileService.addComment(post.id, this.currentUser.id, content).subscribe({
+      next: (comment) => {
+        if (!this.postComments[post.id]) {
+          this.postComments[post.id] = [];
+        }
+        this.postComments[post.id].push(comment);
+        post.comments++; // Increment comment count locally
+        this.commentInputs[post.id] = ''; // Clear input
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error adding comment:', err);
+        alert('Failed to post comment. Please try again.');
+      }
+    });
+  }
+
+  isCommentsExpanded(postId: string): boolean {
+    return this.expandedComments.has(postId);
   }
 }

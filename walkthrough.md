@@ -16,7 +16,7 @@
 
     .venv\Scripts\activate
 
-    uvicorn backend.main:app --reload
+    uvicorn backend.app.main:app --reload
     ```
 4.  Verify API at: `http://127.0.0.1:8000/docs`
 
