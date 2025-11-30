@@ -2,7 +2,7 @@
 // IMPORTANT: Update this with your actual backend Cloud Run URL after deployment
 export const environment = {
     production: true,
-    apiUrl: 'https://podium-backend-XXXXXXXXXX-uc.a.run.app'
+    apiUrl: 'https://podium-backend-4kngvq4raa-el.a.run.app'
 };
 
 // To get your backend URL after deployment, run:
