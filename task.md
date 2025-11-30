@@ -13,4 +13,10 @@
     - [x] Feed & Content Sharing <!-- id: 13 -->
     - [x] Opportunity Marketplace (Sponsorships/Jobs) <!-- id: 10 -->
     - [ ] Groups & Communities <!-- id: 14 -->
+- [ ] Deploy to Cloud Run <!-- id: 16 -->
+    - [x] Create Deployment Guide (DEPLOYMENT.md) <!-- id: 17 -->
+    - [x] Create GitHub Actions Workflows <!-- id: 18 -->
+    - [ ] Configure Google Cloud Project (Manual) <!-- id: 19 -->
+    - [ ] Configure GitHub Secrets (Manual) <!-- id: 20 -->
+    - [ ] Trigger Initial Deployment <!-- id: 21 -->
 - [ ] Verification <!-- id: 11 -->

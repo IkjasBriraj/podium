@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  podium-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: podium-app
+    ports:
+      - "4200:4200"  # Frontend
+      - "8000:8000"  # Backend
+    environment:
+      - MONGODB_URL=${MONGODB_URL:-mongodb://host.docker.internal:27017}
+      - DB_NAME=${DB_NAME:-podium_db}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME:-podium-media}
+    env_file:
+      - .env
+    networks:
+      - podium-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Optional: MongoDB service (uncomment if you want MongoDB in Docker too)
+  # mongodb:
+  #   image: mongo:7.0
+  #   container_name: podium-mongodb
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+  #   networks:
+  #     - podium-network
+  #   restart: unless-stopped
+
+networks:
+  podium-network:
+    driver: bridge
+
+# volumes:
+#   mongo-data:

@@ -25,6 +25,11 @@ app.include_router(api_router)
 def read_root():
     return {"message": "Welcome to the Sports Networking API (MongoDB + S3)"}
 
+# Health check endpoint for Cloud Run
+@app.get("/health")
+def health_check():
+    return {"status": "healthy"}
+
 # Database Events
 @app.on_event("startup")
 async def startup_db_client():

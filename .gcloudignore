@@ -1,0 +1,52 @@
+*.git
+.git
+.gitignore
+
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
+.env
+.env.local
+
+# Build artifacts
+frontend/dist/
+*.log
+
+# MongoDB data
+mongo-data/
+
+# Documentation (optional - remove if you want to include)
+*.md.metadata.json
+
+# Test files
+*.test.js
+*.spec.js
+test/
+tests/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.yml
+Dockerfile
+# Keep the Cloud Run specific Dockerfiles
+!Dockerfile.backend
+!Dockerfile.frontend

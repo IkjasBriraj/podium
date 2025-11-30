@@ -95,3 +95,16 @@ Build a professional networking application for sports individuals, starting wit
 ### Manual Verification
 -   Click through the "Sponsor an Athlete" flow.
 -   Post a new "Technique" to the feed.
+
+## Deployment Plan
+### Cloud Run & CI/CD
+-   **Infrastructure**: Google Cloud Run (Serverless Container)
+-   **Database**: MongoDB Atlas (Cloud)
+-   **Storage**: AWS S3 (Media)
+-   **CI/CD**: GitHub Actions
+    -   `deploy-backend.yml`: Builds and deploys backend on push to main.
+    -   `deploy-frontend.yml`: Builds and deploys frontend on push to main.
+-   **Manual Steps**:
+    -   Set up Google Cloud Project and Service Account.
+    -   Configure GitHub Secrets (`GCP_SA_KEY`, `MONGODB_URL`, etc.).
+    -   Update `environment.production.ts` with backend URL after first deployment.
