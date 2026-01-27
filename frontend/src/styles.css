@@ -1,3 +1,589 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===================================
+   THEME CSS VARIABLES
+   =================================== */
+
+:root {
+  /* Dark theme (default) */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-card: #1e293b;
+  --bg-input: #334155;
+  --bg-hover: #475569;
+
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #10b981;
+
+  --border-color: #334155;
+  --border-light: #475569;
+
+  --accent-primary: #10b981;
+  --accent-secondary: #059669;
+  --accent-hover: #047857;
+
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+
+  --transition-speed: 0.3s;
+
+  /* Glass effect defaults (disabled in dark mode) */
+  --glass-bg: transparent;
+  --glass-blur: 0;
+  --glass-border: transparent;
+}
+
+/* ===================================
+   LIGHT THEME (Dimmer, softer version)
+   =================================== */
+[data-theme="light"] {
+  /* Dimmer, softer light colors - not pure white */
+  --bg-primary: #e2e8f0;
+  --bg-secondary: #f1f5f9;
+  --bg-tertiary: #cbd5e1;
+  --bg-card: #f1f5f9;
+  --bg-input: #e2e8f0;
+  --bg-hover: #cbd5e1;
+
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-accent: #059669;
+
+  --border-color: #cbd5e1;
+  --border-light: #94a3b8;
+
+  --accent-primary: #10b981;
+  --accent-secondary: #059669;
+  --accent-hover: #047857;
+
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ===================================
+   GLASS THEME (Apple-style Liquid Glass - More Realistic)
+   =================================== */
+[data-theme="glass"] {
+  --bg-primary: rgba(18, 18, 20, 0.85);
+  --bg-secondary: rgba(28, 28, 30, 0.75);
+  --bg-tertiary: rgba(44, 44, 46, 0.7);
+  --bg-card: rgba(28, 28, 30, 0.6);
+  --bg-input: rgba(44, 44, 46, 0.6);
+  --bg-hover: rgba(58, 58, 60, 0.6);
+
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(174, 174, 178, 0.95);
+  --text-muted: rgba(142, 142, 147, 0.9);
+  --text-accent: #30d158;
+
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.12);
+
+  --shadow-color: rgba(0, 0, 0, 0.25);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+
+  /* Apple-style glass effect variables */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-blur: 40px;
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.05);
+}
+
+/* ===================================
+   GLOBAL STYLES
+   =================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed) ease,
+    color var(--transition-speed) ease;
+  min-height: 100vh;
+}
+
+/* ===================================
+   APPLE-STYLE LIQUID GLASS BACKGROUND
+   =================================== */
+
+/* Glass theme background - cleaner, more Apple-like */
+[data-theme="glass"] body {
+  background: #000000;
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* Subtle gradient background layer */
+[data-theme="glass"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(78, 188, 163, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 0% 100%, rgba(147, 112, 219, 0.12) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Subtle noise texture for realism */
+[data-theme="glass"] body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ===================================
+   APPLE-STYLE GLASS COMPONENTS
+   =================================== */
+
+/* Glass card base style */
+[data-theme="glass"] .bg-slate-800,
+[data-theme="glass"] .bg-slate-900 {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(40px) saturate(150%) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(150%) brightness(1.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.1) inset,
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="glass"] .bg-slate-700 {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.04) 100%) !important;
+  backdrop-filter: blur(20px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Glass rounded elements with highlight */
+[data-theme="glass"] .rounded-xl {
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.08) inset,
+    0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Glass input fields - Apple style */
+[data-theme="glass"] input,
+[data-theme="glass"] textarea,
+[data-theme="glass"] select {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.03) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.05) inset !important;
+}
+
+[data-theme="glass"] input::placeholder,
+[data-theme="glass"] textarea::placeholder {
+  color: rgba(174, 174, 178, 0.6) !important;
+}
+
+[data-theme="glass"] input:focus,
+[data-theme="glass"] textarea:focus,
+[data-theme="glass"] select:focus {
+  border-color: rgba(48, 209, 88, 0.5) !important;
+  box-shadow:
+    0 0 0 3px rgba(48, 209, 88, 0.15),
+    0 0 0 0.5px rgba(255, 255, 255, 0.1) inset !important;
+  outline: none;
+}
+
+/* Glass buttons - Apple style */
+[data-theme="glass"] button {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-theme="glass"] .bg-emerald-500 {
+  background: linear-gradient(180deg, #34c759 0%, #30d158 100%) !important;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.2) inset,
+    0 4px 12px rgba(48, 209, 88, 0.35) !important;
+}
+
+/* ===================================
+   LIGHT THEME - PAGE CONTAINER OVERRIDES
+   =================================== */
+
+/* Training page */
+[data-theme="light"] .training-container {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%) !important;
+}
+
+[data-theme="light"] .training-container .hero-section {
+  background-color: #94a3b8 !important;
+}
+
+[data-theme="light"] .training-container .hero-section::before {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 78, 59, 0.1) 100%) !important;
+}
+
+[data-theme="light"] .training-container .category-card {
+  background: linear-gradient(135deg, rgba(241, 245, 249, 0.95) 0%, rgba(226, 232, 240, 0.95) 100%) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+}
+
+[data-theme="light"] .training-container .video-card {
+  background: rgba(241, 245, 249, 0.9) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+}
+
+[data-theme="light"] .training-container .upload-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.05) 100%) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Highlights page */
+[data-theme="light"] .highlights-container {
+  background: linear-gradient(135deg, #d1d5db 0%, #e2e8f0 50%, #cbd5e1 100%) !important;
+}
+
+[data-theme="light"] .highlights-container .header-section {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%) !important;
+  border-color: rgba(139, 92, 246, 0.2) !important;
+}
+
+[data-theme="light"] .highlights-container .highlight-card {
+  background: rgba(241, 245, 249, 0.95) !important;
+  border-color: rgba(139, 92, 246, 0.2) !important;
+}
+
+[data-theme="light"] .highlights-container .filter-btn {
+  background: rgba(139, 92, 246, 0.1) !important;
+  color: #6d28d9 !important;
+  border-color: rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Strategy page */
+[data-theme="light"] .strategy-container {
+  background: linear-gradient(135deg, #cbd5e1 0%, #e2e8f0 50%, #d1d5db 100%) !important;
+}
+
+[data-theme="light"] .strategy-container .header-section {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(3, 105, 161, 0.05) 100%) !important;
+  border-color: rgba(14, 165, 233, 0.2) !important;
+}
+
+[data-theme="light"] .strategy-container .strategy-card {
+  background: rgba(241, 245, 249, 0.95) !important;
+  border-color: rgba(14, 165, 233, 0.2) !important;
+}
+
+[data-theme="light"] .strategy-container .sidebar-card {
+  background: rgba(241, 245, 249, 0.95) !important;
+  border-color: rgba(14, 165, 233, 0.2) !important;
+}
+
+/* Light theme text color overrides for all pages */
+[data-theme="light"] .hero-title,
+[data-theme="light"] .page-title,
+[data-theme="light"] .section-title,
+[data-theme="light"] .category-title,
+[data-theme="light"] .video-title,
+[data-theme="light"] .highlight-title,
+[data-theme="light"] .strategy-title,
+[data-theme="light"] .sidebar-title,
+[data-theme="light"] .upload-title,
+[data-theme="light"] .topic-name {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .hero-subtitle,
+[data-theme="light"] .page-subtitle,
+[data-theme="light"] .category-count,
+[data-theme="light"] .video-author,
+[data-theme="light"] .player-name,
+[data-theme="light"] .strategy-author,
+[data-theme="light"] .upload-subtitle,
+[data-theme="light"] .tip-text {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .stat,
+[data-theme="light"] .stat-item,
+[data-theme="light"] .views {
+  color: #64748b !important;
+}
+
+/* ===================================
+   GLASS THEME - PAGE CONTAINER OVERRIDES
+   =================================== */
+
+/* Glass page containers */
+[data-theme="glass"] .training-container,
+[data-theme="glass"] .highlights-container,
+[data-theme="glass"] .strategy-container {
+  background: transparent !important;
+}
+
+[data-theme="glass"] .training-container .hero-section,
+[data-theme="glass"] .highlights-container .header-section,
+[data-theme="glass"] .strategy-container .header-section {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.01) 100%) !important;
+  backdrop-filter: blur(30px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="glass"] .category-card,
+[data-theme="glass"] .video-card,
+[data-theme="glass"] .highlight-card,
+[data-theme="glass"] .strategy-card,
+[data-theme="glass"] .sidebar-card,
+[data-theme="glass"] .upload-card {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(40px) saturate(150%) brightness(1.05) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(150%) brightness(1.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.1) inset,
+    0 8px 32px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* ===================================
+   GLOBAL THEME OVERRIDES
+   =================================== */
+
+/* Light theme backgrounds */
+[data-theme="light"] .bg-slate-800 {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .bg-slate-700 {
+  background-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .bg-slate-900 {
+  background-color: #e2e8f0 !important;
+}
+
+/* Light theme text */
+[data-theme="light"] .text-white {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .text-slate-500 {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: #334155 !important;
+}
+
+/* Light theme borders */
+[data-theme="light"] .border-slate-700 {
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .border-slate-600 {
+  border-color: #94a3b8 !important;
+}
+
+/* Light theme inputs */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  background-color: #e2e8f0 !important;
+  border-color: #94a3b8 !important;
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .rounded-xl {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ===================================
+   SETTINGS DROPDOWN STYLES
+   =================================== */
+.settings-dropdown {
+  transform-origin: top right;
+  animation: dropdownSlide 0.2s ease-out;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Light theme settings dropdown */
+[data-theme="light"] .settings-dropdown {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Glass theme settings dropdown - Apple style */
+[data-theme="glass"] .settings-dropdown {
+  background: linear-gradient(180deg,
+      rgba(44, 44, 46, 0.85) 0%,
+      rgba(28, 28, 30, 0.9) 100%) !important;
+  backdrop-filter: blur(50px) saturate(180%) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(50px) saturate(180%) brightness(1.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 0 0 0.5px rgba(255, 255, 255, 0.15) inset,
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 10px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Settings button styling */
+[data-theme="glass"] .settings-container>button {
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.1) inset !important;
+}
+
+[data-theme="light"] .settings-container>button {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .settings-container>button svg {
+  color: #475569 !important;
+}
+
+/* ===================================
+   HOVER STATES
+   =================================== */
+[data-theme="light"] .hover\:bg-slate-700:hover {
+  background-color: #cbd5e1 !important;
+}
+
+[data-theme="glass"] .hover\:bg-slate-700:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ===================================
+   THEME TRANSITIONS
+   =================================== */
+.theme-transition,
+.training-container,
+.highlights-container,
+.strategy-container,
+.bg-slate-800,
+.bg-slate-700,
+.bg-slate-900,
+.rounded-xl,
+input,
+textarea,
+select,
+button {
+  transition: background-color var(--transition-speed) ease,
+    background var(--transition-speed) ease,
+    color var(--transition-speed) ease,
+    border-color var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease,
+    backdrop-filter var(--transition-speed) ease;
+}
+
+/* ===================================
+   SCROLLBAR STYLING
+   =================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+[data-theme="glass"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+}
+
+/* ===================================
+   FEED PAGE THEME OVERRIDES
+   =================================== */
+
+/* Feed light theme */
+[data-theme="light"] .max-w-3xl .bg-slate-800 {
+  background-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .max-w-3xl .bg-slate-900 {
+  background-color: #e2e8f0 !important;
+}
+
+/* Feed glass theme */
+[data-theme="glass"] .max-w-3xl .bg-slate-800 {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(40px) saturate(150%) brightness(1.1) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(150%) brightness(1.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}

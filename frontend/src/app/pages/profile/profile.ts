@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { finalize, timeout } from 'rxjs/operators';
 import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ProfileService, Profile, ProfileUpdateRequest, Post } from '../../services/profile.service';
 import { AuthService } from '../../services/auth.service';
+import { ThemeService, Theme } from '../../services/theme.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -33,13 +34,17 @@ export class ProfileComponent implements OnInit {
   mediaPreview: string | null = null;
   isPosting: boolean = false;
 
+  // Settings
+  showSettings: boolean = false;
+
   constructor(
     private profileService: ProfileService,
     private authService: AuthService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    public themeService: ThemeService
   ) {
     this.profileForm = this.fb.group({
       name: ['', Validators.required],
@@ -474,5 +479,24 @@ export class ProfileComponent implements OnInit {
 
   removeSkill(index: number) {
     this.skillsArray.removeAt(index);
+  }
+
+  // Settings/Theme Methods
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
+  }
+
+  setTheme(theme: Theme) {
+    this.themeService.setTheme(theme);
+    this.showSettings = false;
+  }
+
+  // Close settings dropdown when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.settings-container')) {
+      this.showSettings = false;
+    }
   }
 }

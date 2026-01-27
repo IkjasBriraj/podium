@@ -20,7 +20,47 @@
     z-index: 0;
 }
 
-.player-info-card>* {
+.player-info-card>*,
+.coach-info-card>* {
     position: relative;
     z-index: 1;
+}
+
+/* Glass theme profile card enhancements */
+:host-context([data-theme="glass"]) .player-info-card,
+:host-context([data-theme="glass"]) .coach-info-card,
+[data-theme="glass"] .player-info-card,
+[data-theme="glass"] .coach-info-card {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Glass theme cover image overlay */
+:host-context([data-theme="glass"]) .rounded-xl.overflow-hidden,
+[data-theme="glass"] .rounded-xl.overflow-hidden {
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Glass theme profile image border glow */
+:host-context([data-theme="glass"]) .rounded-full.border-4,
+[data-theme="glass"] .rounded-full.border-4 {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow:
+        0 0 20px rgba(16, 185, 129, 0.2),
+        0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Settings container positioning fix */
+.settings-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 50;
 }

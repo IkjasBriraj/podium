@@ -90,6 +90,7 @@ export interface Post {
     media_url?: string;
     type: string;
     likes: number;
+    dislikes: number;
     comments: number;
 }
 
@@ -143,6 +144,10 @@ export class ProfileService {
 
     likePost(postId: string): Observable<{ likes: number }> {
         return this.apiService.post<{ likes: number }>(`/posts/${postId}/like`, {});
+    }
+
+    dislikePost(postId: string): Observable<{ dislikes: number }> {
+        return this.apiService.post<{ dislikes: number }>(`/posts/${postId}/dislike`, {});
     }
 
     getComments(postId: string): Observable<Comment[]> {

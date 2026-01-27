@@ -128,6 +128,19 @@ export class FeedComponent implements OnInit {
     });
   }
 
+  dislikePost(post: Post) {
+    this.profileService.dislikePost(post.id).subscribe({
+      next: (response) => {
+        post.dislikes = response.dislikes;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error disliking post:', err);
+        alert('Failed to dislike post. Please try again.');
+      }
+    });
+  }
+
   toggleComments(post: Post) {
     if (this.expandedComments.has(post.id)) {
       this.expandedComments.delete(post.id);
