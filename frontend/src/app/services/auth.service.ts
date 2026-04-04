@@ -88,4 +88,25 @@ export class AuthService {
     getUserId(): string | null {
         return this.currentUserValue?.id || null;
     }
+
+    loginWithGoogle(idToken: string): Observable<User> {
+        return this.http.post<any>(`${this.apiUrl}/auth/google`, { id_token: idToken }).pipe(
+            map(response => {
+                const user: User = {
+                    id: response.id,
+                    name: response.name,
+                    email: response.email,
+                    role: response.role,
+                    sport: response.sport,
+                    profile_image: response.profile_image
+                };
+
+                // Store user in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                this.currentUserSubject.next(user);
+
+                return user;
+            })
+        );
+    }
 }

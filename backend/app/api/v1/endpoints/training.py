@@ -31,5 +31,60 @@ async def create_training_video(
     training_repo = TrainingRepository(db.get_db())
     training_service = TrainingService(training_repo)
     return await training_service.create_training_video(
-        title, author, description, type, video_url, file, storage
+        title=title,
+        author=author,
+        description=description,
+        type=type,
+        video_url=video_url,
+        file=file,
+        storage=storage
     )
+
+
+@router.post("/training/analyze-video")
+async def analyze_video(file: UploadFile = File(...)):
+    """Analyze video using local Ollama model"""
+    import shutil
+    import tempfile
+    import os
+    import traceback
+    from backend.app.services.ollama_service import OllamaService
+    
+    print(f"Received video upload: {file.filename}")
+    
+    # Create temp file
+    suffix = os.path.splitext(file.filename)[1]
+    if not suffix: suffix = ".mp4"
+    
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            shutil.copyfileobj(file.file, tmp)
+            tmp_path = tmp.name
+        
+        print(f"Saved temp video to: {tmp_path}")
+            
+        # Run analysis
+        try:
+            print("Starting OllamaService analysis...")
+            service = OllamaService()
+            result = await service.analyze_video(tmp_path)
+            print("Analysis complete.")
+            return result
+        except Exception as e:
+            print(f"Error during analysis: {str(e)}")
+            traceback.print_exc()
+            from fastapi import HTTPException
+            raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+    except Exception as e:
+        print(f"Error handling upload: {str(e)}")
+        traceback.print_exc()
+        from fastapi import HTTPException
+        raise HTTPException(status_code=500, detail=f"Upload processing failed: {str(e)}")
+    finally:
+        # Cleanup
+        if 'tmp_path' in locals() and os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+                print(f"Cleaned up temp file: {tmp_path}")
+            except Exception as e:
+                print(f"Failed to cleanup temp file: {e}")

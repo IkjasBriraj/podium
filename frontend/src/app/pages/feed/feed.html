@@ -73,12 +73,15 @@
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-slate-600 rounded-full overflow-hidden">
-                    <div class="w-full h-full bg-slate-500 flex items-center justify-center text-xs text-white">
-                        {{ post.author_id.substring(0, 2).toUpperCase() }}
+                    <img *ngIf="post.author_image" [src]="post.author_image" [alt]="post.author_name || post.author_id"
+                        class="w-full h-full object-cover">
+                    <div *ngIf="!post.author_image"
+                        class="w-full h-full bg-slate-500 flex items-center justify-center text-xs text-white">
+                        {{ (post.author_name || post.author_id).substring(0, 2).toUpperCase() }}
                     </div>
                 </div>
                 <div>
-                    <h3 class="font-bold text-white">{{ post.author_id }}</h3>
+                    <h3 class="font-bold text-white">{{ post.author_name || post.author_id }}</h3>
                     <p class="text-xs text-slate-400 capitalize">{{ post.type }} • Recent</p>
                 </div>
             </div>

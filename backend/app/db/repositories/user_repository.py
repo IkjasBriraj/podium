@@ -13,7 +13,18 @@ class UserRepository:
         return await self.collection.find().to_list(limit)
     
     async def get_by_id(self, user_id: str) -> Optional[Dict[str, Any]]:
-        """Get user by ID"""
+        """Get user by ID - handles both ObjectId and string IDs"""
+        from bson import ObjectId
+        
+        # Try ObjectId first (for Google auth users)
+        try:
+            user = await self.collection.find_one({"_id": ObjectId(user_id)})
+            if user:
+                return user
+        except:
+            pass
+        
+        # Fall back to string ID
         return await self.collection.find_one({"_id": user_id})
     
     async def create(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -22,7 +33,21 @@ class UserRepository:
         return user_data
     
     async def update(self, user_id: str, update_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Update user"""
+        """Update user - handles both ObjectId and string IDs"""
+        from bson import ObjectId
+        
+        # Try ObjectId first
+        try:
+            result = await self.collection.update_one(
+                {"_id": ObjectId(user_id)},
+                {"$set": update_data}
+            )
+            if result.matched_count > 0:
+                return await self.get_by_id(user_id)
+        except:
+            pass
+        
+        # Fall back to string ID
         result = await self.collection.update_one(
             {"_id": user_id},
             {"$set": update_data}

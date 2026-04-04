@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService, User } from '../../services/auth.service';
+import { RippleDirective } from '../../directives/ripple.directive';
 
 @Component({
   selector: 'app-app-shell',
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, RippleDirective],
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.css',
 })

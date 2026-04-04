@@ -2,7 +2,7 @@
     <div class="max-w-4xl mx-auto px-6 py-12">
         <div class="header-section text-center mb-12">
             <h1 class="page-title">🏸 Match Analysis AI</h1>
-            <p class="page-subtitle">Powered by Gemini 3.0 Vision</p>
+            <p class="page-subtitle">Powered by Gemini 3.0 Vision - Footwork & Technique Analysis</p>
         </div>
 
         <!-- Upload Section -->
@@ -15,6 +15,9 @@
                 <p class="text-slate-400 mb-6">Drag & drop or click to select a video file for AI analysis</p>
                 <input type="file" id="fileInput" (change)="onFileSelected($event)" accept="video/*" hidden>
                 <label for="fileInput" class="upload-btn">Select Video</label>
+                <div class="mt-4 text-slate-500 text-sm">
+                    <p>📍 Footwork patterns • 🎯 Shot technique • ⏱️ Timing analysis</p>
+                </div>
             </div>
         </div>
 
@@ -27,7 +30,8 @@
                 <h3 class="text-xl font-bold text-white mb-2">
                     {{ isUploading ? 'Uploading Video...' : 'Analyzing Match...' }}
                 </h3>
-                <p class="text-emerald-400 mb-4 font-mono">{{ isUploading ? uploadProgress + '%' : analysisStep }}</p>
+                <p class="text-emerald-400 mb-4 font-mono">{{ isUploading ? uploadProgress.toFixed(0) + '%' :
+                    analysisStep }}</p>
 
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" [style.width.%]="isUploading ? uploadProgress : analysisProgress">
@@ -38,24 +42,108 @@
 
         <!-- Results Section -->
         <div class="results-section" *ngIf="analysisComplete">
+            <!-- Main Score Card -->
             <div class="score-card mb-8">
                 <div class="score-circle">
                     <span class="score-value">{{ analysisResults.score }}</span>
-                    <span class="score-label">Performance Score</span>
+                    <span class="score-label">Overall</span>
                 </div>
                 <div class="score-summary">
                     <h3 class="text-2xl font-bold text-white mb-2">Analysis Complete</h3>
-                    <p class="text-slate-300">{{ analysisResults.summary }}</p>
+                    <p class="text-slate-300 mb-4">{{ analysisResults.summary }}</p>
+
+                    <!-- Analysis Stats -->
+                    <div class="flex gap-4 mb-4 text-slate-400 text-sm" *ngIf="analysisResults.framesAnalyzed">
+                        <span>📊 {{ analysisResults.framesAnalyzed }} frames analyzed</span>
+                        <span>🔍 {{ analysisResults.issuesFound }} insights found</span>
+                    </div>
+
+                    <!-- Sub-scores - 5 Categories -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+                        <div class="sub-score">
+                            <div class="sub-score-label">👟 Footwork</div>
+                            <div class="sub-score-bar">
+                                <div class="sub-score-fill footwork-fill"
+                                    [style.width.%]="analysisResults.footworkScore"></div>
+                            </div>
+                            <div class="sub-score-value">{{ analysisResults.footworkScore }}%</div>
+                        </div>
+                        <div class="sub-score">
+                            <div class="sub-score-label">🎯 Technique</div>
+                            <div class="sub-score-bar">
+                                <div class="sub-score-fill technique-fill"
+                                    [style.width.%]="analysisResults.techniqueScore"></div>
+                            </div>
+                            <div class="sub-score-value">{{ analysisResults.techniqueScore }}%</div>
+                        </div>
+                        <div class="sub-score">
+                            <div class="sub-score-label">📍 Positioning</div>
+                            <div class="sub-score-bar">
+                                <div class="sub-score-fill positioning-fill"
+                                    [style.width.%]="analysisResults.positioningScore"></div>
+                            </div>
+                            <div class="sub-score-value">{{ analysisResults.positioningScore }}%</div>
+                        </div>
+                        <div class="sub-score">
+                            <div class="sub-score-label">🧠 Tactical</div>
+                            <div class="sub-score-bar">
+                                <div class="sub-score-fill tactical-fill"
+                                    [style.width.%]="analysisResults.tacticalScore"></div>
+                            </div>
+                            <div class="sub-score-value">{{ analysisResults.tacticalScore }}%</div>
+                        </div>
+                        <div class="sub-score">
+                            <div class="sub-score-label">💪 Physical</div>
+                            <div class="sub-score-bar">
+                                <div class="sub-score-fill physical-fill"
+                                    [style.width.%]="analysisResults.physicalScore"></div>
+                            </div>
+                            <div class="sub-score-value">{{ analysisResults.physicalScore }}%</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <h3 class="text-xl font-bold text-white mb-4">Key Insights</h3>
+            <!-- Top Recommendations -->
+            <div class="recommendations-section mb-8"
+                *ngIf="analysisResults.topRecommendations && analysisResults.topRecommendations.length > 0">
+                <h3 class="text-xl font-bold text-white mb-4">🎯 Priority Training Recommendations</h3>
+                <div class="recommendations-grid">
+                    <div class="recommendation-card"
+                        *ngFor="let rec of analysisResults.topRecommendations; let i = index">
+                        <div class="rec-priority">{{ i + 1 }}</div>
+                        <div class="rec-content">
+                            <div class="rec-category">{{ rec.category | titlecase }}</div>
+                            <div class="rec-issue">{{ rec.issue }}</div>
+                            <div class="rec-action">{{ rec.recommendation }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-4">🔍 Detailed Analysis</h3>
             <div class="issues-list">
                 <div class="issue-card" *ngFor="let issue of analysisResults.issues"
-                    [ngClass]="{'severity-high': issue.severity === 'High', 'severity-medium': issue.severity === 'Medium', 'severity-low': issue.severity === 'Low'}">
+                    [ngClass]="getSeverityClass(issue.severity)">
                     <div class="issue-header">
-                        <span class="issue-title">{{ issue.title }}</span>
-                        <span class="timestamp-badge">{{ issue.timestamp }}</span>
+                        <div class="issue-title-wrapper">
+                            <span class="category-badge" [ngClass]="issue.category">
+                                {{ issue.category === 'footwork' ? '👟' :
+                                issue.category === 'technique' ? '🎯' :
+                                issue.category === 'positioning' ? '📍' :
+                                issue.category === 'tactical' ? '🧠' : '💪' }}
+                            </span>
+                            <span class="issue-title">{{ issue.title }}</span>
+                        </div>
+                        <div class="issue-meta">
+                            <span class="player-badge" *ngIf="issue.player && issue.player !== 'The player'">👤 {{
+                                issue.player }}</span>
+                            <span class="severity-badge" [ngClass]="getSeverityClass(issue.severity)">
+                                {{ issue.severity }}
+                            </span>
+                            <span class="timestamp-badge">⏱️ {{ issue.timestamp }}</span>
+                            <span class="confidence-badge" *ngIf="issue.confidence">{{ issue.confidence }}</span>
+                        </div>
                     </div>
                     <p class="issue-description">{{ issue.description }}</p>
                     <div class="recommendation-box">
@@ -66,7 +154,7 @@
             </div>
 
             <div class="text-center mt-8">
-                <button class="reset-btn" (click)="resetAnalysis()">Analyze Another Video</button>
+                <button class="reset-btn" (click)="resetAnalysis()">🔄 Analyze Another Video</button>
             </div>
         </div>
     </div>

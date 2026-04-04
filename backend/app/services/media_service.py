@@ -9,13 +9,20 @@ class MediaService:
     def validate_media_file(file: UploadFile) -> bool:
         """Validate media file type"""
         allowed_types = [
-            "image/jpeg", "image/png", "image/jpg", "image/webp",
-            "video/mp4", "video/webm"
+            # Images
+            "image/jpeg", "image/png", "image/jpg", "image/webp", "image/gif",
+            # Videos - expanded list
+            "video/mp4", "video/webm", "video/quicktime", "video/x-msvideo",
+            "video/mpeg", "video/ogg", "video/3gpp", "video/x-matroska",
+            "video/avi", "video/mov"
         ]
+        print(f"Validating file: {file.filename}, content_type: {file.content_type}")
+        
         if file.content_type not in allowed_types:
+            print(f"Invalid file type: {file.content_type}")
             raise HTTPException(
                 status_code=400,
-                detail=f"Invalid file type. Allowed types: {', '.join(allowed_types)}"
+                detail=f"Invalid file type '{file.content_type}'. Allowed types: {', '.join(allowed_types)}"
             )
         return True
     

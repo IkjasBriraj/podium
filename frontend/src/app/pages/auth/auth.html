@@ -66,8 +66,28 @@
                 </button>
             </div>
 
+            <!-- OR Divider -->
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-slate-700"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-4 bg-slate-900 text-slate-400">Or continue with</span>
+                </div>
+            </div>
+
+            <!-- Google Sign-In Button -->
+            <div class="flex justify-center">
+                <div id="google-signin-button"></div>
+            </div>
+
+            <!-- Loading indicator for Google auth -->
+            <div *ngIf="isGoogleLoading" class="text-center py-4">
+                <span class="text-emerald-400">Signing in with Google...</span>
+            </div>
+
             <!-- Helper Text -->
-            <div class="text-center">
+            <div class="text-center mt-6">
                 <p class="text-xs text-slate-500">
                     Use any email from mock data with password: <span
                         class="text-emerald-400 font-mono">password123</span>

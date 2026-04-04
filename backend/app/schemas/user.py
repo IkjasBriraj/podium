@@ -68,3 +68,7 @@ class ProfileUpdateRequest(BaseModel):
     years_of_experience: Optional[int] = None
     age_category: Optional[str] = None
     academy: Optional[str] = None
+    # Skills and Experience
+    skills: Optional[List[Skill]] = None
+    experience: Optional[List[Experience]] = None
+

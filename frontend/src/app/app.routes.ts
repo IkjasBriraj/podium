@@ -28,6 +28,14 @@ export const routes: Routes = [
             { path: 'profile', component: ProfileComponent },
             { path: 'jobs', component: JobsComponent },
         ]
-    }
+    },
+    { path: 'feed', redirectTo: '/app/feed', pathMatch: 'full' },
+    { path: 'profile', redirectTo: '/app/profile', pathMatch: 'full' },
+    { path: 'network', redirectTo: '/app/network', pathMatch: 'full' },
+    { path: 'jobs', redirectTo: '/app/jobs', pathMatch: 'full' },
+    { path: 'training', redirectTo: '/app/training', pathMatch: 'full' },
+    { path: 'highlights', redirectTo: '/app/highlights', pathMatch: 'full' },
+    { path: 'strategy', redirectTo: '/app/strategy', pathMatch: 'full' },
+    { path: '**', redirectTo: '' }
 ];
 

@@ -112,41 +112,142 @@ body {
 
 /* ===================================
    APPLE-STYLE LIQUID GLASS BACKGROUND
+   Realistic, smooth blob animations
    =================================== */
 
-/* Glass theme background - cleaner, more Apple-like */
+/* Glass theme background */
 [data-theme="glass"] body {
   background: #000000;
   background-attachment: fixed;
   position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-/* Subtle gradient background layer */
+/* Blob 1 - Top left purple/blue */
 [data-theme="glass"] body::before {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.25) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(78, 188, 163, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 50% at 0% 100%, rgba(147, 112, 219, 0.12) 0%, transparent 50%);
+  top: -20%;
+  left: -20%;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(123, 97, 255, 0.5) 0%, rgba(123, 97, 255, 0) 70%);
+  filter: blur(60px);
+  animation: blob1 25s ease-in-out infinite;
   pointer-events: none;
   z-index: -2;
 }
 
-/* Subtle noise texture for realism */
+/* Blob 2 - Bottom right teal/cyan */
 [data-theme="glass"] body::after {
   content: '';
+  position: fixed;
+  bottom: -30%;
+  right: -20%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(0, 210, 190, 0.4) 0%, rgba(0, 210, 190, 0) 70%);
+  filter: blur(80px);
+  animation: blob2 30s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -3;
+}
+
+/* Additional blob layers using box-shadow technique */
+[data-theme="glass"]::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow:
+    /* Pink blob - center right */
+    60vw 10vh 200px 150px rgba(255, 100, 150, 0.25),
+    /* Purple blob - top center */
+    0vw -30vh 250px 180px rgba(147, 51, 234, 0.2),
+    /* Teal blob - bottom left */
+    -50vw 40vh 200px 120px rgba(20, 184, 166, 0.25);
+  animation: blobShadow 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -4;
+}
+
+/* Smooth blob animations */
+@keyframes blob1 {
+
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+
+  20% {
+    transform: translate(10%, 15%) scale(1.1);
+  }
+
+  40% {
+    transform: translate(25%, 5%) scale(0.95);
+  }
+
+  60% {
+    transform: translate(15%, 20%) scale(1.05);
+  }
+
+  80% {
+    transform: translate(5%, 10%) scale(1);
+  }
+}
+
+@keyframes blob2 {
+
+  0%,
+  100% {
+    transform: translate(0%, 0%) scale(1);
+  }
+
+  25% {
+    transform: translate(-15%, -10%) scale(1.15);
+  }
+
+  50% {
+    transform: translate(-5%, -20%) scale(0.9);
+  }
+
+  75% {
+    transform: translate(-20%, -5%) scale(1.1);
+  }
+}
+
+@keyframes blobShadow {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+
+  33% {
+    transform: translate(5vw, -5vh);
+    opacity: 0.8;
+  }
+
+  66% {
+    transform: translate(-5vw, 5vh);
+    opacity: 1;
+  }
+}
+
+/* Subtle noise texture for realism */
+[data-theme="glass"] .glass-noise {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.02;
+  opacity: 0.015;
   pointer-events: none;
   z-index: -1;
 }
@@ -587,3 +688,35 @@ button {
   -webkit-backdrop-filter: blur(40px) saturate(150%) brightness(1.1) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
+
+/* ===================================
+   NATURAL WATER RIPPLE EFFECT
+   =================================== */
+.water-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple-animation 800ms cubic-bezier(0.1, 0.0, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+:root .water-ripple {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] .water-ripple {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="glass"] .water-ripple {
+  background-color: rgba(255, 255, 255, 0.4);
+  /* Liquid glass glow effect on the ripple */
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); 
+}
+
+@keyframes ripple-animation {
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}

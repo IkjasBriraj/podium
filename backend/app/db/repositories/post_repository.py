@@ -11,7 +11,7 @@ class PostRepository:
     
     async def get_all(self, limit: int = 100) -> List[Dict[str, Any]]:
         """Get all posts (feed)"""
-        return await self.collection.find().sort("_id", -1).to_list(limit)
+        return await self.collection.find().sort("created_at", -1).to_list(limit)
     
     async def get_by_id(self, post_id: str) -> Optional[Dict[str, Any]]:
         """Get post by ID"""
@@ -19,7 +19,7 @@ class PostRepository:
     
     async def get_by_user_id(self, user_id: str, limit: int = 100) -> List[Dict[str, Any]]:
         """Get posts by user ID"""
-        return await self.collection.find({"author_id": user_id}).sort("_id", -1).to_list(limit)
+        return await self.collection.find({"author_id": user_id}).sort("created_at", -1).to_list(limit)
     
     async def create(self, post_data: Dict[str, Any]) -> Dict[str, Any]:
         """Create new post"""
@@ -36,6 +36,17 @@ class PostRepository:
             return None
         post = await self.get_by_id(post_id)
         return post["likes"] if post else None
+    
+    async def increment_dislikes(self, post_id: str) -> Optional[int]:
+        """Increment dislike count for a post"""
+        result = await self.collection.update_one(
+            {"_id": post_id},
+            {"$inc": {"dislikes": 1}}
+        )
+        if result.matched_count == 0:
+            return None
+        post = await self.get_by_id(post_id)
+        return post.get("dislikes", 0) if post else 0
     
     async def increment_comments(self, post_id: str) -> None:
         """Increment comment count for a post"""

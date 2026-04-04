@@ -23,14 +23,16 @@ async def get_feed():
 @router.post("/posts", response_model=Post)
 async def create_post(
     user_id: str = Form(...),
-    content: str = Form(...),
+    author_name: str = Form(""),
+    author_image: str = Form(""),
+    content: str = Form(""),
     type: str = Form(...),
     file: Optional[UploadFile] = File(None)
 ):
     """Create new post"""
     post_repo = PostRepository(db.get_db())
     post_service = PostService(post_repo)
-    return await post_service.create_post(user_id, content, type, file, storage)
+    return await post_service.create_post(user_id, author_name, author_image or None, content, type, file, storage)
 
 
 @router.get("/users/{user_id}/posts", response_model=List[Post])

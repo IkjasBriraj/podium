@@ -6,3 +6,6 @@ python-multipart
 motor
 boto3
 python-dotenv
+opencv-python
+httpx
+Pillow

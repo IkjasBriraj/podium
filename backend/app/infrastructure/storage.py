@@ -4,6 +4,7 @@ from fastapi import UploadFile, HTTPException
 from backend.app.core.config import get_settings
 import uuid
 import os
+from io import BytesIO
 
 settings = get_settings()
 
@@ -39,8 +40,13 @@ class Storage:
                 file_extension = os.path.splitext(file.filename)[1]
                 filename = f"{folder}/{uuid.uuid4()}{file_extension}"
             
+            # Read file content into memory for reliable upload (especially for videos)
+            file.file.seek(0)  # Reset file pointer to beginning
+            file_content = file.file.read()
+            file_obj = BytesIO(file_content)
+            
             self.s3_client.upload_fileobj(
-                file.file,
+                file_obj,
                 self.bucket_name,
                 filename,
                 ExtraArgs={'ContentType': file.content_type}
@@ -52,6 +58,8 @@ class Storage:
         except NoCredentialsError:
             raise HTTPException(status_code=500, detail="AWS Credentials not found")
         except Exception as e:
+            print(f"Upload error: {e}")  # Log for debugging
             raise HTTPException(status_code=500, detail=str(e))
 
 storage = Storage()
+

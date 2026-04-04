@@ -92,6 +92,10 @@ git merge develop
 
 ## 6. Changelog
 
+### Fix: Top-level Routing & Login Freeze (Working Smoothly)
+-   **Issue**: The app used to freeze upon login failure without updating the error state properly in the UI. Also, navigating to `/feed` or `/profile` directly led to angular route match errors.
+-   **Fix**: Added top-level redirects to `app.routes.ts` connecting main paths to `/app/*`. Used `finalize` rx operator and `ChangeDetectorRef.detectChanges()` within `auth.ts` to ensure UI properly displays login errors instead of spinning indefinitely.
+
 ### Fix: Profile Page Freeze
 -   **Issue**: Profile page was freezing on "Loading profile..." because the loading state wasn't being reset if an error occurred during data processing.
 -   **Fix**: Added `finalize` operator to the `getProfile` observable pipe to ensure `isLoading` is always set to `false`, and added error handling for data processing.

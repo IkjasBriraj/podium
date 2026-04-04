@@ -16,6 +16,14 @@ async def like_post(post_id: str):
     return await post_service.like_post(post_id)
 
 
+@router.post("/posts/{post_id}/dislike")
+async def dislike_post(post_id: str):
+    """Dislike a post"""
+    post_repo = PostRepository(db.get_db())
+    post_service = PostService(post_repo)
+    return await post_service.dislike_post(post_id)
+
+
 @router.get("/posts/{post_id}/comments", response_model=List[Comment])
 async def get_comments(post_id: str):
     """Get comments for a post"""

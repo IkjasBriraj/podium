@@ -99,7 +99,7 @@ export class FeedComponent implements OnInit {
     this.isPosting = true;
     const type = this.selectedMedia?.type.startsWith('video') ? 'video' : (this.selectedMedia ? 'image' : 'text');
 
-    this.profileService.createPost(this.currentUser.id, this.newPostContent, type, this.selectedMedia || undefined)
+    this.profileService.createPost(this.currentUser.id, this.currentUser.name, this.currentUser.profile_image || '', this.newPostContent, type, this.selectedMedia || undefined)
       .pipe(finalize(() => {
         this.isPosting = false;
         this.cdr.detectChanges();

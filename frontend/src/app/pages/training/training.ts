@@ -103,6 +103,16 @@ export class TrainingComponent implements OnInit {
     }
 
     submitVideo() {
+        // Basic validation
+        if (!this.newVideo.title.trim()) {
+            alert('Please enter a video title');
+            return;
+        }
+        if (!this.newVideo.author.trim()) {
+            alert('Please enter an author name');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('title', this.newVideo.title);
         formData.append('author', this.newVideo.author);
@@ -110,6 +120,10 @@ export class TrainingComponent implements OnInit {
         formData.append('type', this.uploadType);
 
         if (this.uploadType === 'link') {
+            if (!this.newVideo.video_url.trim()) {
+                alert('Please enter a YouTube URL');
+                return;
+            }
             formData.append('video_url', this.newVideo.video_url);
         } else if (this.uploadType === 'file' && this.selectedFile) {
             formData.append('file', this.selectedFile);

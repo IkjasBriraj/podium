@@ -177,6 +177,26 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  cancelEdit() {
+    // Force cancel - stop loading and reset everything
+    this.isLoading = false;
+    this.isEditing = false;
+    this.error = null;
+
+    // Reset form to original values
+    if (this.profile) {
+      this.populateForm(this.profile);
+    }
+
+    // Clear image selections
+    this.selectedProfileImage = null;
+    this.selectedCoverImage = null;
+    this.profileImagePreview = null;
+    this.coverImagePreview = null;
+
+    this.cdr.detectChanges();
+  }
+
   async saveProfile() {
     if (this.profileForm.invalid) {
       return;
@@ -199,21 +219,27 @@ export class ProfileComponent implements OnInit {
       const updateData: ProfileUpdateRequest = this.profileForm.value;
 
       this.profileService.updateProfile(this.currentUserId!, updateData)
-        .pipe(timeout(10000))
+        .pipe(
+            timeout(10000),
+            finalize(() => {
+                this.isLoading = false;
+                this.cdr.detectChanges();
+            })
+        )
         .subscribe({
           next: (updatedProfile) => {
             this.profile = updatedProfile;
             this.isEditing = false;
-            this.isLoading = false;
             this.selectedProfileImage = null;
             this.selectedCoverImage = null;
             this.profileImagePreview = null;
             this.coverImagePreview = null;
+            this.cdr.detectChanges();
           },
           error: (err) => {
             this.error = 'Failed to update profile. Please try again.';
             console.error('Profile update error:', err);
-            this.isLoading = false;
+            this.cdr.detectChanges();
           }
         });
     } catch (err) {
@@ -397,7 +423,7 @@ export class ProfileComponent implements OnInit {
     this.isPosting = true;
     const type = this.selectedMedia?.type.startsWith('video') ? 'video' : (this.selectedMedia ? 'image' : 'text');
 
-    this.profileService.createPost(this.currentUserId!, this.newPostContent, type, this.selectedMedia || undefined)
+    this.profileService.createPost(this.currentUserId!, this.profile?.name || 'User', this.profile?.profile_image || '', this.newPostContent, type, this.selectedMedia || undefined)
       .pipe(finalize(() => {
         this.isPosting = false;
         this.cdr.detectChanges();

@@ -86,6 +86,8 @@ export interface Post {
     id: string;
     _id?: string;
     author_id: string;
+    author_name?: string;
+    author_image?: string;
     content: string;
     media_url?: string;
     type: string;
@@ -127,9 +129,11 @@ export class ProfileService {
         );
     }
 
-    createPost(userId: string, content: string, type: string, file?: File): Observable<Post> {
+    createPost(userId: string, authorName: string, authorImage: string, content: string, type: string, file?: File): Observable<Post> {
         const formData = new FormData();
         formData.append('user_id', userId);
+        formData.append('author_name', authorName);
+        formData.append('author_image', authorImage);
         formData.append('content', content);
         formData.append('type', type);
         if (file) {

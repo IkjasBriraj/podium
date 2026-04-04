@@ -23,6 +23,8 @@ class PostService:
     async def create_post(
         self, 
         user_id: str, 
+        author_name: str,
+        author_image: Optional[str],
         content: str, 
         type: str, 
         file: Optional[UploadFile], 
@@ -33,15 +35,22 @@ class PostService:
         if file:
             media_url = MediaService.upload_file(file, "posts", storage)
         
+        # Use provided author_name, or fall back to user_id
+        final_author_name = author_name if author_name else user_id
+        
         post_id = str(uuid.uuid4())
         new_post = {
             "_id": post_id,
             "author_id": user_id,
+            "author_name": final_author_name,
+            "author_image": author_image,
             "content": content,
             "media_url": media_url,
             "type": type,
             "likes": 0,
-            "comments": 0
+            "dislikes": 0,
+            "comments": 0,
+            "created_at": datetime.utcnow().isoformat()
         }
         
         return await self.post_repo.create(new_post)
@@ -52,6 +61,13 @@ class PostService:
         if likes_count is None:
             raise HTTPException(status_code=404, detail="Post not found")
         return {"likes": likes_count}
+    
+    async def dislike_post(self, post_id: str) -> Dict[str, int]:
+        """Dislike a post"""
+        dislikes_count = await self.post_repo.increment_dislikes(post_id)
+        if dislikes_count is None:
+            raise HTTPException(status_code=404, detail="Post not found")
+        return {"dislikes": dislikes_count}
     
     async def get_comments(self, post_id: str) -> List[Dict[str, Any]]:
         """Get comments for a post"""
