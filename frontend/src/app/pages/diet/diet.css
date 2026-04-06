@@ -1,0 +1,177 @@
+.diet-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+}
+
+.header-section {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(4, 120, 87, 0.1) 100%);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: rgb(167, 243, 208);
+}
+
+/* Age Selector */
+.age-selector-container {
+    background: rgba(6, 78, 59, 0.6);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.age-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem;
+}
+
+.age-pill {
+    background: rgba(4, 120, 87, 0.5);
+    color: rgb(167, 243, 208);
+    border: 2px solid rgba(16, 185, 129, 0.3);
+    padding: 0.875rem 2rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1.125rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.age-pill:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.8);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.age-pill.active {
+    background: linear-gradient(135deg, rgb(16, 185, 129) 0%, rgb(4, 120, 87) 100%);
+    border-color: rgb(16, 185, 129);
+    color: white;
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
+    transform: translateY(-2px);
+}
+
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2.5rem;
+}
+
+@media (max-width: 1024px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+.main-content {
+    min-width: 0;
+}
+
+.plan-card {
+    background: rgba(6, 78, 59, 0.5);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 1.5rem;
+    padding: 3rem;
+    backdrop-filter: blur(12px);
+    animation: fadeIn 0.4s ease-out;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.plan-title {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.plan-section {
+    display: flex;
+    gap: 1.75rem;
+    margin-bottom: 2.5rem;
+    align-items: flex-start;
+}
+
+.plan-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-icon {
+    font-size: 2.25rem;
+    background: rgba(16, 185, 129, 0.15);
+    width: 4.5rem;
+    height: 4.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.25rem;
+    flex-shrink: 0;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: inset 0 2px 10px rgba(16, 185, 129, 0.2);
+}
+
+.section-content {
+    flex-grow: 1;
+}
+
+.section-content h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.025em;
+}
+
+.section-content p {
+    font-size: 1.05rem;
+    color: rgb(209, 250, 229);
+    line-height: 1.7;
+}
+
+.sidebar {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.rules-card {
+    background: linear-gradient(180deg, rgba(6, 78, 59, 0.8) 0%, rgba(4, 120, 87, 0.5) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+}
+
+.rule-item {
+    line-height: 1.6;
+}

@@ -1,0 +1,18 @@
+.massive-timer {
+    font-size: 18vw; /* Large but fits MM:SS format */
+    line-height: 1;
+    text-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    font-variant-numeric: tabular-nums; /* Prevents jumping */
+    letter-spacing: -2px;
+}
+
+/* Fluid transition when moving between HUD states */
+.hud-container {
+    transition: background-color 0.4s ease-in-out;
+}
+
+/* Hide standard layout constraints when in HUD mode */
+:host {
+    display: block;
+    height: 100vh; /* Actually app-shell handles the scroll, but HUD should just stick to fixed */
+}

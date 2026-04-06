@@ -1,0 +1,240 @@
+<div class="diet-container">
+    <div class="header-section relative">
+        <a routerLink="/app/feed" class="absolute top-6 left-6 text-white/70 hover:text-emerald-400 transition flex items-center gap-2 font-medium bg-black/20 hover:bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm z-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+            </svg>
+            Back to Feed
+        </a>
+        <div class="max-w-6xl mx-auto px-6 py-12 text-center">
+            <h1 class="page-title">🥗 Player Diet & Nutrition Plan</h1>
+            <p class="page-subtitle">Select your age group to get a tailored nutrition plan for peak badminton performance</p>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-6 py-8">
+        <!-- Age Selector -->
+        <div class="age-selector-container" *ngIf="dietType === 'veg'">
+            <h2 class="text-white text-xl font-bold mb-6 text-center">Select Age Group</h2>
+            <div class="age-pills">
+                <button *ngFor="let plan of dietPlans" 
+                        class="age-pill transition-all duration-300"
+                        [class.active]="selectedAgeId === plan.id"
+                        (click)="selectAge(plan.id)">
+                    {{plan.id}} Years
+                </button>
+            </div>
+        </div>
+
+        <!-- Diet Type Selector -->
+        <div class="flex justify-center mt-8">
+            <div class="inline-flex bg-black/20 p-1.5 rounded-full backdrop-blur-sm border border-white/5 shadow-inner">
+                <button class="px-6 py-2.5 rounded-full transition-all duration-300 text-sm font-semibold flex items-center gap-2"
+                        [class]="dietType === 'veg' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20' : 'text-emerald-100/70 hover:text-white hover:bg-white/5'"
+                        (click)="setDietType('veg')">
+                    <span class="text-lg">🥦</span> Vegetarian
+                </button>
+                <button class="px-6 py-2.5 rounded-full transition-all duration-300 text-sm font-semibold flex items-center gap-2"
+                        [class]="dietType === 'non-veg' ? 'bg-rose-500 text-white shadow-lg shadow-rose-500/20' : 'text-emerald-100/70 hover:text-white hover:bg-white/5'"
+                        (click)="setDietType('non-veg')">
+                    <span class="text-lg">🍗</span> Non-Vegetarian
+                </button>
+            </div>
+        </div>
+
+        <div class="content-wrapper mt-10">
+            <!-- Main Content: Dietary Plan -->
+            <div class="main-content" *ngIf="selectedPlan as plan">
+                <ng-container *ngIf="dietDetails as details">
+                    <div class="plan-card" *ngIf="dietType === 'veg'">
+                        <h2 class="plan-title">{{plan.ageGroup}}</h2>
+                        
+                        <div class="plan-section">
+                            <div class="section-icon">🎯</div>
+                            <div class="section-content">
+                                <h3>Main Focus</h3>
+                                <p>{{plan.focus}}</p>
+                            </div>
+                        </div>
+
+                        <div class="plan-section">
+                            <div class="section-icon">🥑</div>
+                            <div class="section-content">
+                                <h3>Nutrition</h3>
+                                <p>{{details.nutrition}}</p>
+                                
+                                <div *ngIf="details.prePostMatch" class="mt-3 bg-emerald-900/40 p-4 rounded-lg border border-emerald-500/30">
+                                    <p class="mb-2 text-emerald-50"><strong class="text-white">Pre-Match (2 hrs before):</strong> {{details.prePostMatch.pre}}</p>
+                                    <p class="text-emerald-50"><strong class="text-white">Post-Match (within 45 mins):</strong> {{details.prePostMatch.post}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="plan-section">
+                            <div class="section-icon">📋</div>
+                            <div class="section-content">
+                                <h3>Strategy</h3>
+                                <p>{{details.strategy}}</p>
+                            </div>
+                        </div>
+
+                        <div class="plan-section">
+                            <div class="section-icon">💧</div>
+                            <div class="section-content">
+                                <h3>Hydration</h3>
+                                <p>{{plan.hydration}}</p>
+                            </div>
+                        </div>
+
+                        <div class="plan-section" *ngIf="details.bestSnacks">
+                            <div class="section-icon">🍌</div>
+                            <div class="section-content">
+                                <h3>Best Snacks</h3>
+                                <p>{{details.bestSnacks}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Sample Non-Vegetarian Daily Meal Plan -->
+                <div class="plan-card mt-8" *ngIf="dietType === 'non-veg'">
+                    <h2 class="plan-title text-[1.8rem] mb-6">🍗 Sample "Non-Vegetarian" Daily Meal Plan</h2>
+                    <p class="text-emerald-100 mb-8 bg-black/20 p-4 rounded-xl border border-white/5">This structure applies to all age groups; simply increase portion sizes as the athlete gets older.</p>
+                    
+                    <div class="plan-section">
+                        <div class="section-icon">🍳</div>
+                        <div class="section-content">
+                            <h3>Breakfast <span class="text-sm text-emerald-300 font-normal ml-2">(Focus: Complex Carbs + Protein)</span></h3>
+                            <ul class="list-disc ml-5 space-y-2 text-emerald-100 mt-2">
+                                <li><strong class="text-white">9–12 yrs:</strong> 1 cup oatmeal with berries and a hard-boiled egg.</li>
+                                <li><strong class="text-white">13–16 yrs:</strong> 2 cups oatmeal, 2 eggs, and a glass of milk.</li>
+                                <li><strong class="text-white">17–20 yrs:</strong> 2+ cups oatmeal with nuts/seeds, 3 eggs, and a side of turkey sausage.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="plan-section">
+                        <div class="section-icon">🍎</div>
+                        <div class="section-content">
+                            <h3>Morning Snack <span class="text-sm text-emerald-300 font-normal ml-2">(School/Training)</span></h3>
+                            <p>Greek yogurt with honey or a banana with peanut butter.</p>
+                        </div>
+                    </div>
+
+                    <div class="plan-section">
+                        <div class="section-icon">🌯</div>
+                        <div class="section-content">
+                            <h3>Lunch <span class="text-sm text-emerald-300 font-normal ml-2">(Focus: Lean Protein + Sustained Energy)</span></h3>
+                            <p><strong class="text-white">The Build:</strong> A grilled chicken breast or lean beef wrap with whole-wheat tortilla, hummus, spinach, peppers, and a side of fruit.</p>
+                        </div>
+                    </div>
+
+                    <div class="plan-section">
+                        <div class="section-icon">🥨</div>
+                        <div class="section-content">
+                            <h3>Pre-Workout Snack <span class="text-sm text-emerald-300 font-normal ml-2">(30–60 mins before)</span></h3>
+                            <p><strong class="text-white">Easy-to-digest carbs:</strong> A handful of pretzels, an apple, or a granola bar.</p>
+                        </div>
+                    </div>
+
+                    <div class="plan-section">
+                        <div class="section-icon">🥩</div>
+                        <div class="section-content">
+                            <h3>Dinner <span class="text-sm text-emerald-300 font-normal ml-2">(Focus: Recovery & Growth)</span></h3>
+                            <ul class="list-disc ml-5 space-y-1 text-emerald-100 mt-2">
+                                <li><strong class="text-white">Protein:</strong> Grilled salmon, lean steak, or roasted chicken.</li>
+                                <li><strong class="text-white">Carbs:</strong> Sweet potato, brown rice, or quinoa.</li>
+                                <li><strong class="text-white">Vegetables:</strong> Broccoli, asparagus, or a large mixed salad.</li>
+                            </ul>
+                            <div class="mt-4 text-sm text-emerald-100 bg-emerald-900/40 p-3 rounded-lg border border-emerald-500/20">
+                                <strong class="text-amber-400">Note:</strong> 13–18-year-olds should double the portion of starchy carbohydrates if training is high-intensity.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="plan-section">
+                        <div class="section-icon">🥛</div>
+                        <div class="section-content">
+                            <h3>Evening/Recovery Snack <span class="text-sm text-emerald-300 font-normal ml-2">(If needed)</span></h3>
+                            <p>Cottage cheese (casein protein is excellent for overnight recovery) or a chocolate milk (the "gold standard" for post-workout recovery).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Extra Sections -->
+                <div class="plan-card mt-8" *ngIf="dietType === 'non-veg'">
+                    <h2 class="plan-title text-[1.8rem] mb-6">⚙️ Key Nutrient Priorities & Tips</h2>
+                    
+                    <div class="plan-section">
+                        <div class="section-icon">🩸</div>
+                        <div class="section-content">
+                            <h3>Key Nutrient Priorities for Young Athletes</h3>
+                            <ul class="space-y-4 mt-4 text-emerald-100">
+                                <li><strong class="text-white block mb-1">Iron (Ages 13–18):</strong> Essential for oxygen transport. Increase intake of red meat, dark leafy greens, and fortified cereals.</li>
+                                <li><strong class="text-white block mb-1">Calcium/Vitamin D:</strong> Critical for bone density during growth spurts. Ensure daily dairy or fortified alternatives.</li>
+                                <li><strong class="text-white block mb-1">Hydration:</strong> The most overlooked performance factor.
+                                    <div class="text-sm text-emerald-100 bg-emerald-900/40 p-4 rounded-xl border border-emerald-500/20 mt-3">
+                                        <strong class="text-amber-400">Simple Rule:</strong> If the urine is darker than pale lemonade, they are dehydrated.
+                                        <ul class="list-disc ml-5 mt-2 space-y-1">
+                                            <li><strong class="text-white">9–12 yrs:</strong> Carry a 20oz water bottle; aim for 2–3 per day.</li>
+                                            <li><strong class="text-white">13–20 yrs:</strong> Aim for 3–4 liters of water daily, plus electrolytes if sweating heavily.</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="plan-section mt-8">
+                        <div class="section-icon">💡</div>
+                        <div class="section-content">
+                            <h3>Practical Tips for Parents</h3>
+                            <ul class="space-y-4 mt-4 text-emerald-100">
+                                <li><strong class="text-sky-300 block mb-1">The "Post-Practice Window":</strong> Within 30 minutes of finishing practice, the athlete should eat a combination of protein and carbs (e.g., a turkey sandwich or a protein smoothie) to stop muscle breakdown.</li>
+                                <li><strong class="text-rose-300 block mb-1">Avoid "Empty" Fuel:</strong> Minimize soda, energy drinks, and heavily processed sugary snacks. They cause "crashes" during games.</li>
+                                <li><strong class="text-amber-300 block mb-1">Individualize:</strong> Every child’s metabolism is different. If they are losing weight or feeling lethargic, increase their complex carbohydrate intake (e.g., more brown rice or sweet potatoes).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Sidebar: Essential Rules -->
+            <div class="sidebar">
+                <div class="sidebar-card rules-card">
+                    <h3 class="sidebar-title">⚡ Essential Rules for All Ages</h3>
+                    
+                    <div class="rule-item">
+                        <h4 class="text-rose-400 font-bold mb-1">🚫 The "No-Go" List</h4>
+                        <p class="text-sm text-emerald-100">Minimize processed sugars and ultra-processed foods. These lead to "energy crashes" mid-game. Badminton requires consistent focus; soda and candy cause blood sugar spikes followed by drops.</p>
+                    </div>
+
+                    <div class="rule-item mt-5">
+                        <h4 class="text-sky-400 font-bold mb-1">💧 Hydration Hierarchy</h4>
+                        <ul class="list-disc ml-5 text-sm text-emerald-100 space-y-1">
+                            <li><strong>Under 60 mins of play:</strong> Water only.</li>
+                            <li><strong>Over 60 mins:</strong> Electrolyte-enhanced water (low sugar).</li>
+                        </ul>
+                    </div>
+
+                    <div class="rule-item mt-5">
+                        <h4 class="text-amber-400 font-bold mb-1">🍳 Consistency</h4>
+                        <p class="text-sm text-emerald-100">Never skip breakfast. A badminton player's brain needs glucose from breakfast to coordinate the quick footwork required on court.</p>
+                    </div>
+
+                    <div class="rule-item mt-6 bg-emerald-900/50 p-4 rounded-xl border border-emerald-500/20">
+                        <h4 class="text-white font-bold mb-2 flex items-center gap-2">🎒 Travel Nutrition (Go-Bag)</h4>
+                        <p class="text-sm text-emerald-100 mb-3">Tournament days are unpredictable. Always pack:</p>
+                        <ul class="flex flex-wrap gap-2 text-xs">
+                            <li class="bg-emerald-800/80 px-2 py-1.5 rounded-md text-emerald-50 border border-emerald-600/50">🍌 Bananas</li>
+                            <li class="bg-emerald-800/80 px-2 py-1.5 rounded-md text-emerald-50 border border-emerald-600/50">🥪 Nut-butter sandwiches</li>
+                            <li class="bg-emerald-800/80 px-2 py-1.5 rounded-md text-emerald-50 border border-emerald-600/50">🍫 Energy bars (&lt;10g sugar)</li>
+                            <li class="bg-emerald-800/80 px-2 py-1.5 rounded-md text-emerald-50 border border-emerald-600/50">🚰 Water bottle</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

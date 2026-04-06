@@ -1,0 +1,107 @@
+<div class="h-screen w-full flex flex-col bg-slate-950 font-sans" [ngClass]="{'hud-mode': state !== DrillState.IDLE}">
+    <!-- Configuration Mode (Only visible when IDLE) -->
+    <div *ngIf="state === DrillState.IDLE" class="flex-1 p-6 flex flex-col items-center justify-center relative bg-gradient-to-br from-slate-900 to-black">
+        <div class="max-w-2xl w-full bg-slate-800/80 p-8 rounded-3xl border border-slate-700 shadow-2xl backdrop-blur-md">
+            <h1 class="text-4xl font-black text-white mb-2 text-center tracking-tight">📱 Digital Coach</h1>
+            <p class="text-emerald-400 font-medium text-center mb-8">Ghosting & Footwork Drill Timer</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Drill Selector -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-slate-400 font-bold uppercase tracking-wider text-xs">Select Drill</label>
+                    <select [(ngModel)]="selectedDrill" class="bg-slate-950 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-semibold">
+                        <option *ngFor="let drill of drills" [ngValue]="drill">{{drill.name}}</option>
+                    </select>
+                </div>
+
+                <!-- Total Duration -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-slate-400 font-bold uppercase tracking-wider text-xs">Total Duration (Minutes)</label>
+                    <input type="number" [(ngModel)]="totalDurationMinutes" min="1" max="60" class="bg-slate-950 border border-slate-700 text-white rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500 transition-all font-semibold">
+                </div>
+            </div>
+
+            <!-- Drill Preview Details -->
+            <div class="bg-black/40 rounded-xl p-5 mb-8 border border-white/5 flex gap-8 justify-center">
+                <div class="text-center">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Work Interval</p>
+                    <p class="text-2xl font-black text-white">{{selectedDrill.workInterval}}s</p>
+                </div>
+                <div class="w-px bg-white/10"></div>
+                <div class="text-center">
+                    <p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Rest Interval</p>
+                    <p class="text-2xl font-black text-emerald-400">{{selectedDrill.restInterval}}s</p>
+                </div>
+            </div>
+
+            <button (click)="startDrill()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-900 text-xl font-black rounded-2xl py-4 shadow-lg hover:shadow-emerald-500/25 transition-all transform hover:-translate-y-1">
+                Start Session
+            </button>
+        </div>
+    </div>
+
+    <!-- HUD Mode (Full Screen typography) -->
+    <div *ngIf="state !== DrillState.IDLE" 
+         class="flex-1 flex flex-col items-center justify-center p-8 transition-colors duration-500 hud-container"
+         [ngClass]="{
+            'bg-emerald-600': state === DrillState.RUNNING,
+            'bg-rose-600': state === DrillState.RESTING,
+            'bg-slate-800': state === DrillState.PAUSED,
+            'bg-blue-600': state === DrillState.COMPLETED
+         }">
+        
+        <!-- Header -->
+        <h2 class="absolute top-10 text-white/70 font-bold text-2xl tracking-widest uppercase">
+            {{selectedDrill.name}}
+        </h2>
+
+        <!-- Main State Indicator -->
+        <div class="text-white/90 text-4xl md:text-6xl font-black uppercase tracking-widest mb-4 text-center">
+            {{ state === DrillState.RUNNING ? 'WORK' : state === DrillState.RESTING ? 'REST' : state === DrillState.PAUSED ? 'PAUSED' : 'SESSION FINISHED' }}
+        </div>
+
+        <!-- Massive Typography Timer (Stage Timer) -->
+        <div class="massive-timer text-white font-black leading-none drop-shadow-2xl font-mono text-center">
+            <ng-container *ngIf="state !== DrillState.COMPLETED">{{ formatTime(currentStageRemaining) }}</ng-container>
+            <ng-container *ngIf="state === DrillState.COMPLETED">DONE!</ng-container>
+        </div>
+
+        <!-- Current Clock -->
+        <div class="absolute bottom-32 flex flex-col items-center">
+            <span class="text-white/60 text-sm font-bold uppercase tracking-widest mb-1">Local Time</span>
+            <span class="text-white/90 text-2xl font-bold font-mono">{{ currentTime | date:'shortTime' }}</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="absolute bottom-10 flex gap-4">
+            <button *ngIf="state === DrillState.RUNNING || state === DrillState.RESTING" 
+                    (click)="pauseDrill()" 
+                    class="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border-2 border-white/50 rounded-full w-20 h-20 flex items-center justify-center transition-all shadow-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+            <button *ngIf="state === DrillState.PAUSED" 
+                    (click)="startDrill()" 
+                    class="bg-emerald-500 hover:bg-emerald-400 backdrop-blur-md text-white border-2 border-emerald-400 rounded-full w-20 h-20 flex items-center justify-center transition-all shadow-xl shadow-emerald-500/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+            <button *ngIf="state === DrillState.COMPLETED" 
+                    (click)="resetDrill()" 
+                    class="bg-blue-500 hover:bg-blue-400 backdrop-blur-md text-white border-2 border-blue-400 rounded-full h-20 px-8 flex items-center justify-center text-xl font-bold transition-all shadow-xl shadow-blue-500/50 uppercase tracking-wider">
+                New Session
+            </button>
+            <button *ngIf="state !== DrillState.COMPLETED" (click)="resetDrill()" 
+                    class="bg-red-500 hover:bg-red-400 backdrop-blur-md text-white border-2 border-red-400 rounded-full w-20 h-20 flex items-center justify-center transition-all shadow-xl shadow-red-500/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10h.01M15 10h.01M12 12h.01M9 14h.01M15 14h.01M12 16h.01M9 18h.01M15 18h.01" />
+                    <rect x="9" y="9" width="6" height="6" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>

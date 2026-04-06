@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SafePipe } from '../../pipes/safe.pipe';
+import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-highlights',
-    imports: [CommonModule, SafePipe],
+    imports: [CommonModule, SafePipe, RouterModule],
     templateUrl: './highlights.html',
     styleUrl: './highlights.css',
 })

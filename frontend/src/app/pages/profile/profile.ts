@@ -7,10 +7,11 @@ import { ProfileService, Profile, ProfileUpdateRequest, Post } from '../../servi
 import { AuthService } from '../../services/auth.service';
 import { ThemeService, Theme } from '../../services/theme.service';
 import { Router } from '@angular/router';
+import { GearManagerComponent } from './components/gear-manager/gear-manager';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, GearManagerComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

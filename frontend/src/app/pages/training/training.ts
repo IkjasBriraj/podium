@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { SafePipe } from '../../pipes/safe.pipe';
 import { ApiService } from '../../services/api.service';
 
 @Component({
     selector: 'app-training',
-    imports: [CommonModule, SafePipe, FormsModule],
+    imports: [CommonModule, SafePipe, FormsModule, RouterModule],
     templateUrl: './training.html',
     styleUrl: './training.css',
 })

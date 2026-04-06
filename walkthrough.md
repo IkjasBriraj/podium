@@ -14,8 +14,8 @@
 3.  Run the server:
     ```bash
 
-    .venv\Scripts\activate
-
+   
+ .venv\Scripts\activate
     uvicorn backend.app.main:app --reload
     ```
 4.  Verify API at: `http://127.0.0.1:8000/docs`
@@ -100,5 +100,23 @@ git merge develop
 -   **Issue**: Profile page was freezing on "Loading profile..." because the loading state wasn't being reset if an error occurred during data processing.
 -   **Fix**: Added `finalize` operator to the `getProfile` observable pipe to ensure `isLoading` is always set to `false`, and added error handling for data processing.
 -   **Verification**:
-    1.  Open the Profile page.
     2.  Verify that the loading spinner disappears and the profile content (or an error message) is displayed.
+
+### Feature: Diet Type Selection
+-   **Description**: Added an option on the Diet & Nutrition Plan page to choose between Vegetarian and Non-Vegetarian diet plans.
+-   **Changes**: 
+    -   Updated the `DietPlan` model to store specific dietary details (`nutrition`, `strategy`, `prePostMatch`, etc.) underneath `veg` and `nonVeg` options.
+    -   Added a toggle button group on the diet page to seamlessly switch between the chosen preferences.
+
+### Feature: Digital Coach
+-   **Description**: Added an interactive 'Digital Coach' drill timer accessible from the sidebar. 
+-   **Changes**:
+    -   Implemented a High-Contrast **Heads-Up Display (HUD)** for easy visibility from afar.
+    -   Integrated an RxJS state-machine loop with the browser's native **Web Speech API** (`speechSynthesis.speak`) for verbal cues and mid-drill motivation ("Come on!").
+
+### Feature: Gear Manager Tracking
+-   **Description**: Embedded an equipment tracking manager beneath the user's Experience module.
+-   **Changes**:
+    -   Tracks stringing metrics (Racket Model, String Brand, Tension, Date).
+    -   Auto-evaluates strings exceeding their 90-day duration logic to output a `Needs Restringing` alert badge.
+    -   Added a robust **String Advisor** to quickly identify ideal strings for Power, Durability, and Tension metrics.

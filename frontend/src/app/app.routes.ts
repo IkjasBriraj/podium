@@ -9,7 +9,9 @@ import { NetworkComponent } from './pages/network/network';
 import { TrainingComponent } from './pages/training/training';
 import { HighlightsComponent } from './pages/highlights/highlights';
 import { StrategyComponent } from './pages/strategy/strategy';
+import { DietComponent } from './pages/diet/diet';
 import { MatchAnalysisComponent } from './pages/match-analysis/match-analysis';
+import { DigitalCoachComponent } from './pages/digital-coach/digital-coach';
 
 export const routes: Routes = [
     { path: '', component: LandingComponent },
@@ -22,8 +24,10 @@ export const routes: Routes = [
             { path: 'feed', component: FeedComponent },
             { path: 'training', component: TrainingComponent },
             { path: 'training/analysis', component: MatchAnalysisComponent },
+            { path: 'digital-coach', component: DigitalCoachComponent },
             { path: 'highlights', component: HighlightsComponent },
             { path: 'strategy', component: StrategyComponent },
+            { path: 'diet', component: DietComponent },
             { path: 'network', component: NetworkComponent },
             { path: 'profile', component: ProfileComponent },
             { path: 'jobs', component: JobsComponent },
@@ -34,8 +38,10 @@ export const routes: Routes = [
     { path: 'network', redirectTo: '/app/network', pathMatch: 'full' },
     { path: 'jobs', redirectTo: '/app/jobs', pathMatch: 'full' },
     { path: 'training', redirectTo: '/app/training', pathMatch: 'full' },
+    { path: 'digital-coach', redirectTo: '/app/digital-coach', pathMatch: 'full' },
     { path: 'highlights', redirectTo: '/app/highlights', pathMatch: 'full' },
     { path: 'strategy', redirectTo: '/app/strategy', pathMatch: 'full' },
+    { path: 'diet', redirectTo: '/app/diet', pathMatch: 'full' },
     { path: '**', redirectTo: '' }
 ];
 

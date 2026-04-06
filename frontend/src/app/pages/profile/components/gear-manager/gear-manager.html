@@ -1,0 +1,123 @@
+<div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mt-8 relative overflow-hidden group/gear shadow-lg">
+    <div class="flex justify-between items-center mb-6 relative z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center">
+                <span class="text-xl">🏸</span>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white">Gear Manager</h3>
+                <p class="text-xs text-slate-400">Track and maintain your equipment</p>
+            </div>
+        </div>
+        <button *ngIf="!showAddForm" (click)="showAddForm = true" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-sm px-4 py-2 rounded-lg transition-all duration-200 border border-amber-500/20">
+            + Add Racket
+        </button>
+    </div>
+
+    <!-- Racket List -->
+    <div *ngIf="!showAddForm" class="space-y-4 relative z-10">
+        <div *ngFor="let racket of rackets" class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 hover:border-amber-500/30 transition-colors flex justify-between items-start group">
+            
+            <div class="flex gap-4">
+                <div class="w-12 h-16 bg-slate-800 border-2 border-slate-700 rounded flex items-center justify-center relative overflow-hidden">
+                    <span class="text-slate-500 text-2xl font-black italic select-none">R</span>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold">{{racket.brand}} {{racket.model}}</h4>
+                    <div class="flex items-center gap-3 mt-2 text-sm">
+                        <span class="text-slate-400 bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700">
+                            🧵 {{racket.stringType}}
+                        </span>
+                        <span class="text-slate-400 bg-slate-800 px-2 py-1 rounded text-xs border border-slate-700">
+                            ⚖️ {{racket.tension}} {{racket.tensionUnit}}
+                        </span>
+                    </div>
+
+                    <!-- Stringing Status -->
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-xs text-slate-500">Last Strung: {{racket.lastStringingDate | date:'mediumDate'}}</span>
+                        <span *ngIf="needsRestringing(racket.lastStringingDate)" 
+                              class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse">
+                            ⚠️ Needs Restringing ({{getDaysElapsed(racket.lastStringingDate)}} days)
+                        </span>
+                        <span *ngIf="!needsRestringing(racket.lastStringingDate)" 
+                              class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            ✅ Good Condition ({{getDaysElapsed(racket.lastStringingDate)}} days)
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <button (click)="deleteRacket(racket.id)" class="text-slate-600 hover:text-rose-400 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="rackets.length === 0" class="text-center py-6 text-slate-500">
+            No rackets tracked yet. Add one to keep your strings fresh!
+        </div>
+    </div>
+
+    <!-- Add Racket Form -->
+    <div *ngIf="showAddForm" class="bg-slate-900/80 p-5 rounded-xl border border-amber-500/30 relative z-10">
+        <h4 class="text-white font-bold mb-4">Add New Racket</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+                <label class="text-slate-400 text-xs block mb-1">Brand</label>
+                <input [(ngModel)]="newRacket.brand" type="text" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white" placeholder="e.g. Yonex">
+            </div>
+            <div>
+                <label class="text-slate-400 text-xs block mb-1">Model</label>
+                <input [(ngModel)]="newRacket.model" type="text" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white" placeholder="e.g. Astrox 99">
+            </div>
+            <div>
+                <label class="text-slate-400 text-xs block mb-1">String Type</label>
+                <input [(ngModel)]="newRacket.stringType" type="text" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white" placeholder="e.g. BG80 Power">
+            </div>
+            <div class="flex gap-2">
+                <div class="flex-1">
+                    <label class="text-slate-400 text-xs block mb-1">Tension</label>
+                    <input [(ngModel)]="newRacket.tension" type="number" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white" placeholder="26">
+                </div>
+                <div class="w-1/3">
+                    <label class="text-slate-400 text-xs block mb-1">Unit</label>
+                    <select [(ngModel)]="newRacket.tensionUnit" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white">
+                        <option value="lbs">lbs</option>
+                        <option value="kg">kg</option>
+                    </select>
+                </div>
+            </div>
+            <div class="md:col-span-2">
+                <label class="text-slate-400 text-xs block mb-1">Last Stringing Date</label>
+                <input [(ngModel)]="newRacket.lastStringingDate" type="date" class="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white">
+            </div>
+        </div>
+        <div class="flex justify-end gap-3 mt-5">
+            <button (click)="showAddForm = false" class="px-4 py-2 text-sm text-slate-400 hover:text-white transition">Cancel</button>
+            <button (click)="addRacket()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-5 py-2 rounded-lg transition-transform hover:-translate-y-0.5">Save Racket</button>
+        </div>
+    </div>
+
+    <!-- String Advisor Section (Included as requested) -->
+    <div class="mt-8 border-t border-slate-700/50 pt-5 relative z-10">
+        <h4 class="text-white font-bold mb-3 flex items-center gap-2">💡 String Advisor</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 hover:border-amber-500/20 transition">
+                <span class="text-rose-400 font-bold text-sm block mb-1">🔥 Power & Repulsion</span>
+                <p class="text-xs text-slate-400 leading-tight">Strings like <strong class="text-white">Aerobite</strong>, <strong class="text-white">BG66 Ultimax</strong>, or <strong class="text-white">Exbolt 63</strong>. Very thin gauge (under 0.66mm). High repulsion, great sound, poor durability.</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 hover:border-amber-500/20 transition">
+                <span class="text-emerald-400 font-bold text-sm block mb-1">🛡️ Durability</span>
+                <p class="text-xs text-slate-400 leading-tight">Strings like <strong class="text-white">BG65</strong>, <strong class="text-white">BG65 Ti</strong>, or <strong class="text-white">Nanogy 95</strong>. Thicker gauge (0.69mm+). Lasts for months, but offers less "bounce" and control feels harder.</p>
+            </div>
+            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 hover:border-amber-500/20 transition">
+                <span class="text-sky-400 font-bold text-sm block mb-1">⚖️ Tension Guide</span>
+                <p class="text-xs text-slate-400 leading-tight">Beginners: <strong class="text-white">20-22 lbs</strong> (large sweet spot). Intermediate: <strong class="text-white">23-25 lbs</strong>. Advanced/Pro: <strong class="text-white">26+ lbs</strong> (smaller sweet spot, requires perfect center hit for power).</p>
+            </div>
+        </div>
+    </div>
+</div>
